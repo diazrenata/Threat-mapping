@@ -79,30 +79,66 @@ cat('\n', date(), '\n'); flush.console()
 
 
 ### THREAT MAPPING ANALYSIS ###
-### gather threats data ###
+### Gather threats data ###
 ### add threat columns to natureServeCounties shapefile ###
 ### analysis with stan ###
 
 #### Gather threats data ####
-
-# load prefix function (redundant w/above)
-
-prefix <- function(x, len, pre='0') {
-
-  # x		value to add leading characters (will be coerced to character class)
-  # len	desired number of characters in x... will not be made shorter if x is longer than this
-  # pre	value to pre-pend to x, will be repeated until nchar(x)==len
-
-  x <- as.character(x)
-  size <- nchar(x)
-  if (nchar(x) < len) {
-    addTo <- paste(rep(pre, each=len - size), collapse='')
-    x <- paste0(addTo, x)
-  }
-  return(x)
-}
-
-
+# load prefix function
+# load natureServeCounties and add leading zeros to FIPS codes
+# Climate change
+# Climate stability
+# Roads
+# Human population density - 2010 census
+# Venter (Human footprint) layers:
+# Human footprint index - Venter
+# Population density 1990 - Venter
+# Population density 2010 - Venter
+# Built environments - Venter
+# Croplands - Venter
+# Pasture - Venter
+# Night lights - Venter
+# Roads - Venter
+# National land cover database
+# Active mines ####
+# MRDS
+# Sriram et al layers:
+# Sriram cars
+# Sriram soil degradation
+# Sriram proximity to roads
+# Sriram pigs
+# Sriram poultry
+# Zabel crop suitability
+# Human appropriation of NPP
+# PADUS
+# Invasive alien species - EDDMapS
+# NLCD Percent Developed Imperviousness
+# SPARROW Water quality (N and P pollution)
+# Railroads
+# Oil and gas wells
+# Crude oil pipelines
+# Shale plays
+# Coal mines
+#
+#
+# # load prefix function (redundant w/above)
+#
+# prefix <- function(x, len, pre='0') {
+#
+#   # x		value to add leading characters (will be coerced to character class)
+#   # len	desired number of characters in x... will not be made shorter if x is longer than this
+#   # pre	value to pre-pend to x, will be repeated until nchar(x)==len
+#
+#   x <- as.character(x)
+#   size <- nchar(x)
+#   if (nchar(x) < len) {
+#     addTo <- paste(rep(pre, each=len - size), collapse='')
+#     x <- paste0(addTo, x)
+#   }
+#   return(x)
+# }
+#
+#
 # # load natureServeCounties and add leading zeros to FIPS codes
 # natureServeCounties <- shapefile('H:/Global Change Program/Research/Multi-Threat Assessment/Threatened Species Data (NatureServe)/Data/ORIGINAL/NS_mv_CTY_bdrys_G12ESAtots_201403')
 # natureServeCounties$FIPS_CODE_LONG <- apply(as.matrix(natureServeCounties$FIPS), 1, prefix, len = 5, pre = "0")
@@ -185,7 +221,7 @@ prefix <- function(x, len, pre='0') {
 
 
 
-# ## regression for change in temp and precip ##
+# ## regressions for change in temp and precip ##
 
 # ## precip ##
 # run this once and then save .csv files to save time
@@ -278,7 +314,7 @@ prefix <- function(x, len, pre='0') {
 
 
 # ##  Climate stability  ##
-
+# # Characterize "past" and "present" climates for each county
 # # Calculate bioclim variables for entire US for every year.
 # yearlyBioclim <- function(year) {
 #  tminDir <- 'H:/Global Change Program/GIS/Climate/PRISM/2 arcmin/tmin'
@@ -412,7 +448,7 @@ prefix <- function(x, len, pre='0') {
 
 #write.csv(bioVarDf, "bioVarDf.csv")
 
-#### PCA on a random subset of all data ####
+# # PCA on a random subset of all data
 
 # ### loading only a portion of bioVarDf for troubleshooting.
 # # rm(list=ls())
@@ -449,11 +485,9 @@ prefix <- function(x, len, pre='0') {
 #  Standard deviation     1.7386 1.1941 0.8430 0.62664 0.5618 0.36382
 #  Proportion of Variance 0.5038 0.2376 0.1184 0.06545 0.0526 0.02206
 #  Cumulative Proportion  0.5038 0.7415 0.8599 0.92533 0.9779 1.00000
-
-
-#### compare past/future in different ways: kde, GAM, Euclidean distance, polygons.
-
-#### Aggregate US raster and select every 4th year of data ####
+#
+#
+# # Aggregate US raster and select every 4th year of data
 
 # usaBio1 <- stack(list.files(path = 'H:/Global Change Program/GIS/Climate/PRISM/2 arcmin/biovars_annual', pattern = 'bio1_', full.names=TRUE))
 # usaBio2 <- stack(list.files(path = 'H:/Global Change Program/GIS/Climate/PRISM/2 arcmin/biovars_annual', pattern = 'bio2_', full.names=TRUE))
@@ -486,7 +520,7 @@ prefix <- function(x, len, pre='0') {
 #
 # wholeUS.every4.ag <- aggregate(wholeUS.every4, fact = 2, fun = mean, expand = FALSE, na.rm = TRUE)
 #
-# #### Create a df of all biovars for every 4th year for every aggregated cell ####
+# # Create a df of all biovars for every 4th year for every aggregated cell
 # cellsmax <- ncell(wholeUS.every4.ag[[1]])
 # filled.cells <- extract(wholeUS.every4.ag[[1]], 1:cellsmax, df=TRUE)
 #
@@ -510,8 +544,8 @@ prefix <- function(x, len, pre='0') {
 #
 # sapply(1:length(filled.cells$ID), pullBioVars)
 #
-# #### KDE for climate stability ####
-# ### kde operates on every CELL across YEARS:
+#  # Use KDE to compare past and present climates
+# ##  kde operates on every CELL across YEARS
 #
 # library(MASS)
 #
@@ -568,7 +602,7 @@ prefix <- function(x, len, pre='0') {
 # write.csv(cellStabilities, 'H:/Global Change Program/GIS/Climate/PRISM/2 arcmin/climate_change/kde_stability/kdeStabilityIndex.csv')
 # cellStabilities <- read.csv('H:/Global Change Program/GIS/Climate/PRISM/2 arcmin/climate_change/kde_stability/kdeStabilityIndex.csv')
 #
-# #### Make a raster of stabilities ####
+# ## Make a raster of stabilities
 #
 # stability <- wholeUSevery4.ag[[1]]
 # stability <- stability * 0 + 1
@@ -607,30 +641,11 @@ prefix <- function(x, len, pre='0') {
 # kdeStabilities <- as.matrix(kdeStabilities)
 #
 # write.csv(kdeStabilities, 'H:/Global Change Program/GIS/Climate/PRISM/2 arcmin/biovars_annual/stability/kde_stabilities.csv')
-
-### gam operates on every CELL across YEARS:
-### get a matrix of i, j using pca axes where value i, j is INTEGER number of points in cell i,j
-### define past GAM
-### define future GAM
-### compute S
-### return S per county cell
-
-### euclidean distance operates on every CELL across ARBITRARY TIME PERIODS:
-
-
-
-### polygons operate on every CELL across ARBITRARY NONOVERLAPPING TIME PERIODS
-
-
+#
 #### Roads ####
-
-#### add roads threat columns
-# natureServeCounties <- countEndemicsThreatenedByThreat("c4p1p0_roads")
-# natureServeCounties <- countEndemicsThreatenedByThreat("c4p0_transport")
-
-
+#
 #### Tally road lengths using GRASS ####
-
+#
 # states <- list.files(path ='H:/Global Change Program/GIS/Transportation/Roads - USDA/roadsGRASS/', pattern ='.shp', full.names=FALSE)
 # clipstates <- function(statelong) {
 #   statenew <- substr(statelong, (as.numeric(nchar(statelong)) - 5), as.numeric(nchar(statelong)) - 4)
@@ -715,7 +730,7 @@ prefix <- function(x, len, pre='0') {
 
 #### Human population density - 2010 census ####
 # path: H:/Global Change Program/GIS/Population/2010 Census Demographic Profile SF/DEC_10_DP_DPDP1_with_ann.csv
-### Load US 2010 census data...
+### Load and clean 2010 US census data; incorporate revisions
 #
 # workDir <- 'H:/Global Change Program/GIS/Population/2010 Census Demographic Profile SF'
 # censusRaw <- read.csv(paste(workDir, '/DEC_10_DP_DPDP1_with_ann.csv', sep=""), skip = 1)
@@ -817,8 +832,6 @@ prefix <- function(x, len, pre='0') {
 #
 # censusRevised$Final_population <- sapply(c(1:length(censusRevised$FIPS_CODE_LONG)), joinPopulations)
 # rm(joinPopulations)
-#
-# typeof(censusRevised$Final_population)
 #
 # filepath <- 'H:/Global Change Program/GIS/Population/2010 Census Demographic Profile SF/censusClean.csv'
 # write.csv(censusRevised, filepath)
@@ -1276,11 +1289,6 @@ prefix <- function(x, len, pre='0') {
 # rm(i)
 
 #### PADUS ####
-
-library(jsonlite)
-library(RPushbullet)
-
-
 # PADUS shapefile is too big to hold both the original shapefile and a subset in memory
 #
 # processPADUS_GAP <- function(gapLevel) {
@@ -1635,6 +1643,7 @@ library(RPushbullet)
 
 #### Invasive alien species - EDDMapS ####
 #
+# Don't use for now - permissions unclear
 # iasFiles <- list.files(path = 'H:/Global Change Program/GIS/Invasive species/EDDMapS April 12 2017', full.names = TRUE)
 #
 # readIAS <- function(iasFilePath) {
@@ -2383,282 +2392,275 @@ library(RPushbullet)
 # rm(coalMines)
 # rm(nCoalMines)
 # rm(countCoalMines)
-
-
-
-
-
-
+#
+#
+#
 #### Add predictor columns to natureServeCounties ####
+# Function to standardize columns with mean 0 and standard deviation 1
+# Climate change regressions
+# Climate stability
+# Road lengths and density
+# 2010 census - counts and log
+# Venter (Human Footprint) layers
+# National land cover database
+# Active Mines database
+# MRDS mines
+# Sriram layers
+# Crop suitability
+# Human appropriation of NPP
+# PADUS proportions
+# EDDMapS Invasives
+# NLCD Percent developed imperviousness
+# SPARROW N and P pollution
+# Railroads
+# Oil and gas wells
+# Oil pipelines
+# Shale plays
+# Coal mines
+#
+#
+#
+# # Function to standardize columns with mean 0 and standard deviation 1
+# standardize <- function(Xvector) {
+#   for (i in 1:length(Xvector)) {
+#     Xvector[i] <- (Xvector[i] - mean(Xvector, na.rm=TRUE)) / sd(Xvector, na.rm=TRUE)
+#   }
+#   return(Xvector)
+# }
 
-standardize <- function(Xvector) {
-  for (i in 1:length(Xvector)) {
-    Xvector[i] <- (Xvector[i] - mean(Xvector, na.rm=TRUE)) / sd(Xvector, na.rm=TRUE)
-  }
-  return(Xvector)
-}
+# # Climate change regressions
+# natureServeCountiesClimate <- read.csv('H:/Global Change Program/GIS/Climate/PRISM/2 arcmin/climate_change/regressions/natureServeCounties_withAllRegressions.csv')
+# natureServeCountiesClimate$FIPS_CODE_LONG <- apply(as.matrix(natureServeCountiesClimate$FIPS_CODE_LONG), 1, prefix, len = 5, pre = "0")
+#
+# colsToJoin <- c('FIPS_CODE_LONG', 'precipAllYears', 'precipLastThirty', 'tmeanAllYears', 'tmeanLastThirty', 'precipPropAllYears', 'precipPropLastThirty')
+# natureServeCountiesClimate <- natureServeCountiesClimate[ , colsToJoin]
+# colnames(natureServeCountiesClimate) <- c('FIPS_CODE_LONG', 'preAllYrs', 'preLast30', 'temAllYrs', 'temLast30', 'prePropAllYrs', 'prePropLast30')
+#
+# natureServeCountiesClimate$temAllYrsStd <- standardize(as.vector(natureServeCountiesClimate$temAllYrs))
+# natureServeCountiesClimate$temLast30Std <- standardize(as.vector(natureServeCountiesClimate$temLast30))
+#
+#
+#
+# natureServeCountiesClimate$prePropAllYrsStd <- standardize(as.vector(natureServeCountiesClimate$prePropAllYrs))
+# natureServeCountiesClimate$prePropAllYrsStdSqrd <- (natureServeCountiesClimate$prePropAllYrsStd) ^ 2
+#
+# natureServeCountiesClimate$prePropLast30Std <- standardize(as.vector(natureServeCountiesClimate$prePropLast30))
+# natureServeCountiesClimate$prePropLast30StdSqrd <- (natureServeCountiesClimate$prePropLast30Std) ^ 2
+#
+# natureServeCounties@data <- join(natureServeCounties@data, natureServeCountiesClimate, by = 'FIPS_CODE_LONG', type = 'left')
+#
+#
+# rm(natureServeCountiesClimate)
+# rm(colsToJoin)
 
-#### Add climate slope to natureServeCounties ####
-natureServeCountiesClimate <- read.csv('H:/Global Change Program/GIS/Climate/PRISM/2 arcmin/climate_change/regressions/natureServeCounties_withAllRegressions.csv')
-natureServeCountiesClimate$FIPS_CODE_LONG <- apply(as.matrix(natureServeCountiesClimate$FIPS_CODE_LONG), 1, prefix, len = 5, pre = "0")
-
-colsToJoin <- c('FIPS_CODE_LONG', 'precipAllYears', 'precipLastThirty', 'tmeanAllYears', 'tmeanLastThirty', 'precipPropAllYears', 'precipPropLastThirty')
-natureServeCountiesClimate <- natureServeCountiesClimate[ , colsToJoin]
-colnames(natureServeCountiesClimate) <- c('FIPS_CODE_LONG', 'preAllYrs', 'preLast30', 'temAllYrs', 'temLast30', 'prePropAllYrs', 'prePropLast30')
-
-natureServeCountiesClimate$temAllYrsStd <- standardize(as.vector(natureServeCountiesClimate$temAllYrs))
-natureServeCountiesClimate$temLast30Std <- standardize(as.vector(natureServeCountiesClimate$temLast30))
-
-
-
-natureServeCountiesClimate$prePropAllYrsStd <- standardize(as.vector(natureServeCountiesClimate$prePropAllYrs))
-natureServeCountiesClimate$prePropAllYrsStdSqrd <- (natureServeCountiesClimate$prePropAllYrsStd) ^ 2
-
-natureServeCountiesClimate$prePropLast30Std <- standardize(as.vector(natureServeCountiesClimate$prePropLast30))
-natureServeCountiesClimate$prePropLast30StdSqrd <- (natureServeCountiesClimate$prePropLast30Std) ^ 2
-
-natureServeCounties@data <- join(natureServeCounties@data, natureServeCountiesClimate, by = 'FIPS_CODE_LONG', type = 'left')
-# natureServeCounties$precipPropAllYearsSquared <- natureServeCounties$precipPropAllYears^2
-# natureServeCounties$precipPropLastThirtySquared <- natureServeCounties$precipPropLastThirty^2
-
-rm(natureServeCountiesClimate)
-rm(colsToJoin)
-
-#### Add climate stability to natureServeCounties ####
-
-kdeStability <- read.csv('H:/Global Change Program/GIS/Climate/PRISM/2 arcmin/biovars_annual/stability/kde_stabilities.csv')
-kdeStability <- kdeStability[ , c('FIPS_CODE_LONG', 'meanStability')]
-colnames(kdeStability) <- c('FIPS_CODE_LONG', 'kdeMeanStab')
-kdeStability$kdeMeanStab <- as.numeric(kdeStability$kdeMeanStab)
-kdeStability$kdeMeanStabStd <- standardize(as.vector(kdeStability$kdeMeanStab))
-kdeStability$FIPS_CODE_LONG <- apply(as.matrix(kdeStability$FIPS_CODE_LONG), 1, prefix, len = 5, pre = "0")
-natureServeCounties@data <- join(natureServeCounties@data, kdeStability, by = 'FIPS_CODE_LONG', type = 'left')
-rm(kdeStability)
-
-#### add TIGER road lengths to natureServeCounties ####
-countyRoadLengths <- read.csv('H:/Global Change Program/GIS/Transportation/Roads - USDA/roadsGRASS/county_road_lengths.csv')
-countyRoadLengths$FIPS_CODE_LONG <- as.character(countyRoadLengths$FIPS_CODE_LONG)
-countyRoadLengths$FIPS_CODE_LONG <- unlist(lapply(countyRoadLengths$FIPS_CODE_LONG, prefix, 5, pre = '0'))
-head(countyRoadLengths)
-countyRoadLengths <- countyRoadLengths[,2:3]
-colnames(countyRoadLengths) <- c('TIGERroadLength', 'FIPS_CODE_LONG')
-countyRoadLengths$TIGERroadLength <- unlist(countyRoadLengths$TIGERroadLength)
-natureServeCounties@data <- join(natureServeCounties@data, countyRoadLengths, by = 'FIPS_CODE_LONG', type = 'left')
-
-# quality check on roads matching
-#roadsNSC <- natureServeCounties[,c('FIPS_CODE_LONG', 'LENGTH')]
-#nrow(roadsNSC)
-#3219
-#noRoads <- natureServeCounties@data[which(is.na(natureServeCounties$LENGTH)),]
-#nrow(noRoads)
-# 126
-# 3219-126
-# 3093
-#nrow(countyRoadLengths)
-# 3093
-# so all roads in the county roads database match to a county in natureServeCounties.
-# of the 126 counties without road lengths...
-#nrow(noRoads[ which(noRoads$STATE_NAME == 'Alaska'), ])
-#nrow(noRoads[ which(noRoads$STATE_NAME == 'Hawaii'), ])
-#nrow(noRoads[ which(noRoads$STATE_NAME == 'Puerto Rico'), ])
-#nrow(noRoads[ which(noRoads$STATE_NAME == 'Massachusetts'), ])
-# 27 are in Alaska, 5 are in Hawaii, 78 are in Puerto Rico, and 14 are in Massachusetts (states excluded from roads db), accounting for 124
-# the other two are Levy, Florida and Ste. Genevieve, Missouri.
-
-
-# density defined as length of roads (in meters) per unit area of county (Shape_Area - what are the units?)
-
-natureServeCounties$TIGERroadDensity <- natureServeCounties$TIGERroadLength/natureServeCounties$Shape_Area
-natureServeCounties$TIGERroadDensityStd <- standardize(as.vector(natureServeCounties$TIGERroadDensity))
-rm(countyRoadLengths)
-
-#### add 2010 Census population density to natureServeCounties ####
-censusRevised <- read.csv('H:/Global Change Program/GIS/Population/2010 Census Demographic Profile SF/censusClean.csv')
-censusRevised$FIPS_CODE_LONG <- unlist(sapply(censusRevised$FIPS_CODE_LONG, prefix, len = 5, pre ='0'))
-censusRevised$Final_population <- as.numeric(censusRevised$Final_population)
-censusCols <- c('FIPS_CODE_LONG', 'Final_population')
-censusRevised <- censusRevised[,censusCols]
-colnames(censusRevised) <- c('FIPS_CODE_LONG', 'censusPop')
-rm(censusCols)
-
-natureServeCounties@data <- join(natureServeCounties@data, censusRevised, by = 'FIPS_CODE_LONG', type ='left')
-rm(censusRevised)
+# # Climate stability
+#
+# kdeStability <- read.csv('H:/Global Change Program/GIS/Climate/PRISM/2 arcmin/biovars_annual/stability/kde_stabilities.csv')
+# kdeStability <- kdeStability[ , c('FIPS_CODE_LONG', 'meanStability')]
+# colnames(kdeStability) <- c('FIPS_CODE_LONG', 'kdeMeanStab')
+# kdeStability$kdeMeanStab <- as.numeric(kdeStability$kdeMeanStab)
+# kdeStability$kdeMeanStabStd <- standardize(as.vector(kdeStability$kdeMeanStab))
+# kdeStability$FIPS_CODE_LONG <- apply(as.matrix(kdeStability$FIPS_CODE_LONG), 1, prefix, len = 5, pre = "0")
+# natureServeCounties@data <- join(natureServeCounties@data, kdeStability, by = 'FIPS_CODE_LONG', type = 'left')
+# rm(kdeStability)
+#
+# # Road lengths and density
+# countyRoadLengths <- read.csv('H:/Global Change Program/GIS/Transportation/Roads - USDA/roadsGRASS/county_road_lengths.csv')
+# countyRoadLengths$FIPS_CODE_LONG <- as.character(countyRoadLengths$FIPS_CODE_LONG)
+# countyRoadLengths$FIPS_CODE_LONG <- unlist(lapply(countyRoadLengths$FIPS_CODE_LONG, prefix, 5, pre = '0'))
+# head(countyRoadLengths)
+# countyRoadLengths <- countyRoadLengths[,2:3]
+# colnames(countyRoadLengths) <- c('TIGERroadLength', 'FIPS_CODE_LONG')
+# countyRoadLengths$TIGERroadLength <- unlist(countyRoadLengths$TIGERroadLength)
+# natureServeCounties@data <- join(natureServeCounties@data, countyRoadLengths, by = 'FIPS_CODE_LONG', type = 'left')
+# #density defined as length of roads (in meters) per unit area of county (Shape_Area - what are the units?)
+#
+# natureServeCounties$TIGERroadDensity <- natureServeCounties$TIGERroadLength/natureServeCounties$Shape_Area
+# natureServeCounties$TIGERroadDensityStd <- standardize(as.vector(natureServeCounties$TIGERroadDensity))
+# rm(countyRoadLengths)
+#
+# # 2010 census
+# censusRevised <- read.csv('H:/Global Change Program/GIS/Population/2010 Census Demographic Profile SF/censusClean.csv')
+# censusRevised$FIPS_CODE_LONG <- unlist(sapply(censusRevised$FIPS_CODE_LONG, prefix, len = 5, pre ='0'))
+# censusRevised$Final_population <- as.numeric(censusRevised$Final_population)
+# censusCols <- c('FIPS_CODE_LONG', 'Final_population')
+# censusRevised <- censusRevised[,censusCols]
+# colnames(censusRevised) <- c('FIPS_CODE_LONG', 'censusPop')
+# rm(censusCols)
+#
+# natureServeCounties@data <- join(natureServeCounties@data, censusRevised, by = 'FIPS_CODE_LONG', type ='left')
+# rm(censusRevised)
+#
 # Census data incomplete matches for Alaska, Puerto Rico.
 # noCensus <- natureServeCounties@data[ which(is.na(natureServeCounties@data$Census_population)), ]
 # unique(noCensus$STATE_NAME)
+# # :Log population
+# natureServeCounties$logCensusPop <- log(natureServeCounties$censusPop)
+# natureServeCounties$logCensusPopStd <- standardize(as.vector(natureServeCounties$logCensusPop))
 
-# add log population
-natureServeCounties$logCensusPop <- log(natureServeCounties$censusPop)
-
-# standardize log population
-natureServeCounties$logCensusPopStd <- standardize(as.vector(natureServeCounties$logCensusPop))
-
-#### Add Venter (Human Footprint) layers to natureServeCounties ####
-venter <- read.csv('H:/Global Change Program/GIS/Human Impact & Development/Human Footprint/Dryadv2/nscWithVenterMeans.csv')
-
-venter <- venter[ , c('FIPS_CODE_LONG', 'hfiMeans',  'builtMeans', 'nightLightMeans', "pastureMeans",  "cropsMeans", "popdens1990Means", "popdens2010Means", "roadMeans")]
-
-colnames(venter) <- c('FIPS_CODE_LONG', 'venterHFI', 'venterBuilt', 'venterNtLt', 'venterPasture', 'venterCrop', 'venterPop1990s', 'venterPop2010s', "venterRoad")
-
-venter$venterCropPasture <- venter$venterPasture + venter$venterCrop
-
-venter$venterHFIStd <- standardize(as.vector(venter$venterHFI))
-venter$venterBuiltStd <- standardize(as.vector(venter$venterBuilt))
-venter$venterNtLtStd <- standardize(as.vector(venter$venterNtLt))
-venter$venterPastureStd <- standardize(as.vector(venter$venterPasture))
-venter$venterCropStd <- standardize(as.vector(venter$venterCrop))
-venter$venterCropPastureStd <- standardize(as.vector(venter$venterCropPasture))
-venter$venterPop1990sStd <- standardize(as.vector(venter$venterPop1990s))
-venter$venterPop2010sStd <- standardize(as.vector(venter$venterPop2010s))
-venter$venterRoadStd <- standardize(as.vector(venter$venterRoad))
-
-venter$FIPS_CODE_LONG <- apply(as.matrix(venter$FIPS_CODE_LONG), 1, prefix, len = 5, pre = "0")
-
-
-natureServeCounties@data <- join(natureServeCounties@data, venter, by = 'FIPS_CODE_LONG', type = 'left')
-rm(venter)
-
-#### Add NLCD to nsc ####
-
-nlcd <- read.csv('H:/Global Change Program/GIS/Land use/National Land Cover Database 2011/Tallies/nlcdAllTalliesWithFractions.csv')
-nlcd <- nlcd[ , c('FIPS_CODE_LONG', 'Developed.Fraction', 'Cultivated.Fraction', 'Crops.Fraction', 'Pasture.Fraction', 'Grass.Pasture.Fraction')]
-
-colnames(nlcd) <- c('FIPS_CODE_LONG', 'nlcdDev', 'nlcdCultiv', 'nlcdCrops', 'nlcdPasture', 'nlcdGrassPasture')
-
-nlcd$nlcdDevAg <- nlcd$nlcdDev + nlcd$nlcdCultiv
-nlcd$nlcdDevStd <- standardize(as.vector(nlcd$nlcdDev))
-nlcd$nlcdCultivStd <- standardize(as.vector(nlcd$nlcdCultiv))
-nlcd$nlcdCropsStd <- standardize(as.vector(nlcd$nlcdCrops))
-nlcd$nlcdPastureStd <- standardize(as.vector(nlcd$nlcdPasture))
-nlcd$nlcdGrassPastureStd <- standardize(as.vector(nlcd$nlcdGrassPasture))
-nlcd$nlcdDevAgStd <- standardize(as.vector(nlcd$nlcdDevAg))
-
-nlcd$FIPS_CODE_LONG <- apply(as.matrix(nlcd$FIPS_CODE_LONG), 1, prefix, len = 5, pre = "0")
-
-
-natureServeCounties@data <- join(natureServeCounties@data, nlcd, by = 'FIPS_CODE_LONG')
-
-rm(nlcd)
-
-
-#### Add ActiveMines to natureServeCounties ####
-activeMines <- read.csv('H:/Global Change Program/GIS/Land use/Mining/Active mines in the US/activeMines.csv')
-activeMines <- activeMines[ , 2:3]
-
-colnames(activeMines) <- c('FIPS_CODE_LONG', 'activeMines')
-
-activeMines$FIPS_CODE_LONG <- apply(as.matrix(activeMines$FIPS_CODE_LONG), 1, prefix, len = 5, pre = "0")
-
-
-natureServeCounties@data <- join(natureServeCounties@data, activeMines, by = "FIPS_CODE_LONG")
-
-natureServeCounties$activeMinesDens <- natureServeCounties$activeMines/natureServeCounties$Shape_Area
-natureServeCounties$activeMinesDensStd <- standardize(as.vector(natureServeCounties$activeMinesDens))
-
-rm(activeMines)
-
-
-#### Add MRDS mines to natureServeCounties ####
-mrdsMines <- read.csv('H:/Global Change Program/GIS/Land use/Mining/mrds/mrdsMinesProducers_Plants.csv')
-mrdsMines <- mrdsMines[ , 2:3]
-colnames(mrdsMines) <- c('FIPS_CODE_LONG', 'mrdsMines')
-mrdsMines$FIPS_CODE_LONG <- apply(as.matrix(mrdsMines$FIPS_CODE_LONG), 1, prefix, len = 5, pre = "0")
-
-natureServeCounties@data <- join(natureServeCounties@data, mrdsMines, by = 'FIPS_CODE_LONG', type = 'left')
-natureServeCounties$mrdsMinesDens <- natureServeCounties$mrdsMines / natureServeCounties$Shape_Area
-natureServeCounties$mrdsMinesDensStd <- standardize(as.vector(natureServeCounties$mrdsMinesDens))
-
-
-rm(mrdsMines)
-
-
-#### Add Sriram layers to natureServeCounties ####
-cars <- read.csv('H:/Global Change Program/GIS/Sriram/cars.csv')
-soilDeg <- read.csv('H:/Global Change Program/GIS/Sriram/SoilDeg.csv')
-proxRoads <- read.csv('H:/Global Change Program/GIS/Sriram/ProxRoads.csv')
-pigs <- read.csv('H:/Global Change Program/GIS/Sriram/Pigs.csv')
-poultry <- read.csv('H:/Global Change Program/GIS/Sriram/Poultry.csv')
-
-sriram <- cbind(cars, soilDeg, proxRoads, pigs, poultry)
-sriram <- sriram[ , c('FIPS_CODE_LONG', 'meanCars', 'meanSoilDeg', 'meanProxRoads', 'meanPigs', 'meanPoultry')]
-colnames(sriram) <- c('FIPS_CODE_LONG', 'sriCars', 'sriSoilDeg', 'sriProxRoads', 'sriPigs', 'sriPoultry')
-sriram$FIPS_CODE_LONG <- apply(as.matrix(sriram$FIPS_CODE_LONG), 1, prefix, len = 5, pre = "0")
-
-
-sriram$sriCars <- as.numeric(sriram$sriCars)
-sriram$sriSoilDeg <- as.numeric(sriram$sriSoilDeg)
-sriram$sriProxRoads <- as.numeric(sriram$sriProxRoads)
-sriram$sriPigs <- as.numeric(sriram$sriPigs)
-sriram$sriPoultry <- as.numeric(sriram$sriPoultry)
-
-
-sriram$sriCarsStd <- standardize(as.vector(as.numeric(sriram$sriCars)))
-sriram$sriSoilDegStd <- standardize(as.vector(as.numeric(sriram$sriSoilDeg)))
-sriram$sriProxRoadsStd <- standardize(as.vector(as.numeric(sriram$sriProxRoads)))
-sriram$sriPigsStd <- standardize(as.vector(as.numeric(sriram$sriPigs)))
-sriram$sriPoultryStd <- standardize(as.vector(as.numeric(sriram$sriPoultry)))
-
-
-
-
-natureServeCounties@data <- join(natureServeCounties@data, sriram, by = 'FIPS_CODE_LONG', type = 'left')
-
-rm(sriram)
-rm(cars)
-rm(soilDeg)
-rm(proxRoads)
-rm(pigs)
-rm(poultry)
-
-
-#### Add crop suitability to natureServeCounties ####
-cropSuit <- read.csv('H:/Global Change Program/GIS/Land use/Agricultural suitability/meanCropSuit.csv')
-cropSuit <- cropSuit[ ,2:3]
-colnames(cropSuit) <- c('FIPS_CODE_LONG', 'cropSuit')
-cropSuit$cropSuit <- as.numeric(cropSuit$cropSuit)
-cropSuit$cropSuitStd <- standardize(as.vector(cropSuit$cropSuit))
-cropSuit$FIPS_CODE_LONG <- apply(as.matrix(cropSuit$FIPS_CODE_LONG), 1, prefix, len = 5, pre = "0")
-
-natureServeCounties@data <- join(natureServeCounties@data, cropSuit, by = "FIPS_CODE_LONG", type = "left")
-
-rm(cropSuit)
-
-
-#### Add human appropriation of NPP to natureServeCounties ####
-hanpp <- read.csv('H:/Global Change Program/GIS/Human Impact & Development/Human Appropriation of NPP - SEDAC/meanHANPP.csv')
-hanpp <- hanpp[ ,2:3]
-colnames(hanpp) <- c('FIPS_CODE_LONG', 'hanpp')
-hanpp$hanpp <- as.numeric(hanpp$hanpp)
-hanpp$hanppStd <- standardize(as.vector(hanpp$hanpp))
-hanpp$FIPS_CODE_LONG <- apply(as.matrix(hanpp$FIPS_CODE_LONG), 1, prefix, len = 5, pre = "0")
-
-
-natureServeCounties@data <- join(natureServeCounties@data, hanpp, by = 'FIPS_CODE_LONG', type = 'left')
-
-rm(hanpp)
+# # Venter (Human Footprint) layers
+# venter <- read.csv('H:/Global Change Program/GIS/Human Impact & Development/Human Footprint/Dryadv2/nscWithVenterMeans.csv')
+#
+# venter <- venter[ , c('FIPS_CODE_LONG', 'hfiMeans',  'builtMeans', 'nightLightMeans', "pastureMeans",  "cropsMeans", "popdens1990Means", "popdens2010Means", "roadMeans")]
+#
+# colnames(venter) <- c('FIPS_CODE_LONG', 'venterHFI', 'venterBuilt', 'venterNtLt', 'venterPasture', 'venterCrop', 'venterPop1990s', 'venterPop2010s', "venterRoad")
+#
+# venter$venterCropPasture <- venter$venterPasture + venter$venterCrop
+#
+# venter$venterHFIStd <- standardize(as.vector(venter$venterHFI))
+# venter$venterBuiltStd <- standardize(as.vector(venter$venterBuilt))
+# venter$venterNtLtStd <- standardize(as.vector(venter$venterNtLt))
+# venter$venterPastureStd <- standardize(as.vector(venter$venterPasture))
+# venter$venterCropStd <- standardize(as.vector(venter$venterCrop))
+# venter$venterCropPastureStd <- standardize(as.vector(venter$venterCropPasture))
+# venter$venterPop1990sStd <- standardize(as.vector(venter$venterPop1990s))
+# venter$venterPop2010sStd <- standardize(as.vector(venter$venterPop2010s))
+# venter$venterRoadStd <- standardize(as.vector(venter$venterRoad))
+#
+# venter$FIPS_CODE_LONG <- apply(as.matrix(venter$FIPS_CODE_LONG), 1, prefix, len = 5, pre = "0")
 #
 #
-# # #### Add PADUS proprotions to natureServeCounties ####
-padusProportions <- read.csv('H:/Global Change Program/GIS/Protected Areas/PAD-US version 1.4 Combined Feature Class/padusCounties.csv')
-colnames(padusProportions)
-padusProportions <- padusProportions[ , 2:(ncol(padusProportions))]
-for (i in 2:ncol(padusProportions)) {
-  thisColName <- colnames(padusProportions[i])
-  nwColName <- paste0(thisColName, "Std", sep="")
-  thisColStd <- standardize(as.numeric(padusProportions[,i]))
-  thisColStd <- as.data.frame(thisColStd)
-  colnames(thisColStd) <- nwColName
-  padusProportions <- cbind(padusProportions, thisColStd)
-}
-padusProportions$FIPS_CODE_LONG <- apply(as.matrix(padusProportions$FIPS_CODE_LONG), 1, prefix, len = 5, pre = "0")
-
-natureServeCounties@data <- join(natureServeCounties@data,padusProportions, by = "FIPS_CODE_LONG", type = "left")
+# natureServeCounties@data <- join(natureServeCounties@data, venter, by = 'FIPS_CODE_LONG', type = 'left')
+# rm(venter)
 #
-rm(padusProportions)
-# #
+# # National land cover database
+# nlcd <- read.csv('H:/Global Change Program/GIS/Land use/National Land Cover Database 2011/Tallies/nlcdAllTalliesWithFractions.csv')
+# nlcd <- nlcd[ , c('FIPS_CODE_LONG', 'Developed.Fraction', 'Cultivated.Fraction', 'Crops.Fraction', 'Pasture.Fraction', 'Grass.Pasture.Fraction')]
+#
+# colnames(nlcd) <- c('FIPS_CODE_LONG', 'nlcdDev', 'nlcdCultiv', 'nlcdCrops', 'nlcdPasture', 'nlcdGrassPasture')
+#
+# nlcd$nlcdDevAg <- nlcd$nlcdDev + nlcd$nlcdCultiv
+# nlcd$nlcdDevStd <- standardize(as.vector(nlcd$nlcdDev))
+# nlcd$nlcdCultivStd <- standardize(as.vector(nlcd$nlcdCultiv))
+# nlcd$nlcdCropsStd <- standardize(as.vector(nlcd$nlcdCrops))
+# nlcd$nlcdPastureStd <- standardize(as.vector(nlcd$nlcdPasture))
+# nlcd$nlcdGrassPastureStd <- standardize(as.vector(nlcd$nlcdGrassPasture))
+# nlcd$nlcdDevAgStd <- standardize(as.vector(nlcd$nlcdDevAg))
+#
+# nlcd$FIPS_CODE_LONG <- apply(as.matrix(nlcd$FIPS_CODE_LONG), 1, prefix, len = 5, pre = "0")
 #
 #
-# #### Add EDDMapS IAS to natureServeCounties ####
+# natureServeCounties@data <- join(natureServeCounties@data, nlcd, by = 'FIPS_CODE_LONG')
+#
+# rm(nlcd)
+#
+# # Active Mines database
+# activeMines <- read.csv('H:/Global Change Program/GIS/Land use/Mining/Active mines in the US/activeMines.csv')
+# activeMines <- activeMines[ , 2:3]
+#
+# colnames(activeMines) <- c('FIPS_CODE_LONG', 'activeMines')
+#
+# activeMines$FIPS_CODE_LONG <- apply(as.matrix(activeMines$FIPS_CODE_LONG), 1, prefix, len = 5, pre = "0")
+#
+#
+# natureServeCounties@data <- join(natureServeCounties@data, activeMines, by = "FIPS_CODE_LONG")
+#
+# natureServeCounties$activeMinesDens <- natureServeCounties$activeMines/natureServeCounties$Shape_Area
+# natureServeCounties$activeMinesDensStd <- standardize(as.vector(natureServeCounties$activeMinesDens))
+#
+# rm(activeMines)
+#
+#
+# # MRDS mines
+# mrdsMines <- read.csv('H:/Global Change Program/GIS/Land use/Mining/mrds/mrdsMinesProducers_Plants.csv')
+# mrdsMines <- mrdsMines[ , 2:3]
+# colnames(mrdsMines) <- c('FIPS_CODE_LONG', 'mrdsMines')
+# mrdsMines$FIPS_CODE_LONG <- apply(as.matrix(mrdsMines$FIPS_CODE_LONG), 1, prefix, len = 5, pre = "0")
+#
+# natureServeCounties@data <- join(natureServeCounties@data, mrdsMines, by = 'FIPS_CODE_LONG', type = 'left')
+# natureServeCounties$mrdsMinesDens <- natureServeCounties$mrdsMines / natureServeCounties$Shape_Area
+# natureServeCounties$mrdsMinesDensStd <- standardize(as.vector(natureServeCounties$mrdsMinesDens))
+#
+#
+# rm(mrdsMines)
+#
+# # Sriram layers
+# cars <- read.csv('H:/Global Change Program/GIS/Sriram/cars.csv')
+# soilDeg <- read.csv('H:/Global Change Program/GIS/Sriram/SoilDeg.csv')
+# proxRoads <- read.csv('H:/Global Change Program/GIS/Sriram/ProxRoads.csv')
+# pigs <- read.csv('H:/Global Change Program/GIS/Sriram/Pigs.csv')
+# poultry <- read.csv('H:/Global Change Program/GIS/Sriram/Poultry.csv')
+#
+# sriram <- cbind(cars, soilDeg, proxRoads, pigs, poultry)
+# sriram <- sriram[ , c('FIPS_CODE_LONG', 'meanCars', 'meanSoilDeg', 'meanProxRoads', 'meanPigs', 'meanPoultry')]
+# colnames(sriram) <- c('FIPS_CODE_LONG', 'sriCars', 'sriSoilDeg', 'sriProxRoads', 'sriPigs', 'sriPoultry')
+# sriram$FIPS_CODE_LONG <- apply(as.matrix(sriram$FIPS_CODE_LONG), 1, prefix, len = 5, pre = "0")
+#
+#
+# sriram$sriCars <- as.numeric(sriram$sriCars)
+# sriram$sriSoilDeg <- as.numeric(sriram$sriSoilDeg)
+# sriram$sriProxRoads <- as.numeric(sriram$sriProxRoads)
+# sriram$sriPigs <- as.numeric(sriram$sriPigs)
+# sriram$sriPoultry <- as.numeric(sriram$sriPoultry)
+#
+#
+# sriram$sriCarsStd <- standardize(as.vector(as.numeric(sriram$sriCars)))
+# sriram$sriSoilDegStd <- standardize(as.vector(as.numeric(sriram$sriSoilDeg)))
+# sriram$sriProxRoadsStd <- standardize(as.vector(as.numeric(sriram$sriProxRoads)))
+# sriram$sriPigsStd <- standardize(as.vector(as.numeric(sriram$sriPigs)))
+# sriram$sriPoultryStd <- standardize(as.vector(as.numeric(sriram$sriPoultry)))
+#
+#
+#
+#
+# natureServeCounties@data <- join(natureServeCounties@data, sriram, by = 'FIPS_CODE_LONG', type = 'left')
+#
+# rm(sriram)
+# rm(cars)
+# rm(soilDeg)
+# rm(proxRoads)
+# rm(pigs)
+# rm(poultry)
+#
+#
+# # Crop suitability
+# cropSuit <- read.csv('H:/Global Change Program/GIS/Land use/Agricultural suitability/meanCropSuit.csv')
+# cropSuit <- cropSuit[ ,2:3]
+# colnames(cropSuit) <- c('FIPS_CODE_LONG', 'cropSuit')
+# cropSuit$cropSuit <- as.numeric(cropSuit$cropSuit)
+# cropSuit$cropSuitStd <- standardize(as.vector(cropSuit$cropSuit))
+# cropSuit$FIPS_CODE_LONG <- apply(as.matrix(cropSuit$FIPS_CODE_LONG), 1, prefix, len = 5, pre = "0")
+#
+# natureServeCounties@data <- join(natureServeCounties@data, cropSuit, by = "FIPS_CODE_LONG", type = "left")
+#
+# rm(cropSuit)
+#
+# # Human appropriation of NPP
+# hanpp <- read.csv('H:/Global Change Program/GIS/Human Impact & Development/Human Appropriation of NPP - SEDAC/meanHANPP.csv')
+# hanpp <- hanpp[ ,2:3]
+# colnames(hanpp) <- c('FIPS_CODE_LONG', 'hanpp')
+# hanpp$hanpp <- as.numeric(hanpp$hanpp)
+# hanpp$hanppStd <- standardize(as.vector(hanpp$hanpp))
+# hanpp$FIPS_CODE_LONG <- apply(as.matrix(hanpp$FIPS_CODE_LONG), 1, prefix, len = 5, pre = "0")
+#
+#
+# natureServeCounties@data <- join(natureServeCounties@data, hanpp, by = 'FIPS_CODE_LONG', type = 'left')
+#
+# rm(hanpp)
+#
+#
+# # PADUS proportions
+# padusProportions <- read.csv('H:/Global Change Program/GIS/Protected Areas/PAD-US version 1.4 Combined Feature Class/padusCounties.csv')
+# colnames(padusProportions)
+# padusProportions <- padusProportions[ , 2:(ncol(padusProportions))]
+# for (i in 2:ncol(padusProportions)) {
+#   thisColName <- colnames(padusProportions[i])
+#   nwColName <- paste0(thisColName, "Std", sep="")
+#   thisColStd <- standardize(as.numeric(padusProportions[,i]))
+#   thisColStd <- as.data.frame(thisColStd)
+#   colnames(thisColStd) <- nwColName
+#   padusProportions <- cbind(padusProportions, thisColStd)
+# }
+# padusProportions$FIPS_CODE_LONG <- apply(as.matrix(padusProportions$FIPS_CODE_LONG), 1, prefix, len = 5, pre = "0")
+#
+# natureServeCounties@data <- join(natureServeCounties@data,padusProportions, by = "FIPS_CODE_LONG", type = "left")
+#
+# rm(padusProportions)
+#
+#
+#
+# # EDDMapS Invasives
+# # Not included as of July 2017 - not sure about permissions
 # invasives <- read.csv('H:/Global Change Program/GIS/Invasive species/EDDMapS April 12 2017/nsvWithInvasives.csv')
 # invasives <- invasives[ , c('FIPS_CODE_LONG', 'Number.of.Invasive.Plants', 'Number.of.Invasive.Diseases', 'Number.of.Invasive.Insects', 'Number.of.Invasive.Wildlife')]
 #
@@ -2674,97 +2676,90 @@ rm(padusProportions)
 # natureServeCounties@data <- join(natureServeCounties@data, invasives, by = 'FIPS_CODE_LONG', type = 'left')
 #
 # rm(invasives)
-
-
-#### Add NLCD Percent Developed Imperviousness to natureServeCounties ####
-imperviousness <- read.csv('H:/Global Change Program/GIS/Land use/NCLD Developed Imperviousness 2011/percentImpervious.csv')
-imperviousness <- imperviousness[ , c('FIPS_CODE_LONG', 'Percent.Impervious')]
-colnames(imperviousness) <- c('FIPS_CODE_LONG', 'percentImperv')
-imperviousness$percentImpervStd <- standardize(as.vector(imperviousness$percentImperv))
-imperviousness$FIPS_CODE_LONG <- apply(as.matrix(imperviousness$FIPS_CODE_LONG), 1, prefix, len = 5, pre = "0")
-
-natureServeCounties@data <- join(natureServeCounties@data, imperviousness, by = "FIPS_CODE_LONG", type = 'left')
-
-rm(imperviousness)
-
-
-
-#### add SPARROW to natureServeCounties ####
-sparrow <- read.csv('H:/Global Change Program/GIS/Human Impact & Development/Water quality/EPA SPARROW models/SPARROW 2002 Nitrogen and Phosphorous Pollution/meanYieldsByCounty.csv')
-sparrow <- sparrow[ , c('FIPS_CODE_LONG', 'meanNitrogenYield', 'meanPhosphorusYield')]
-colnames(sparrow) <- c('FIPS_CODE_LONG', 'sparrowN', 'sparrowP')
-sparrow$sparrowNP <- sparrow$sparrowN + sparrow$sparrowP
-sparrow$sparrowNStd <- standardize(as.vector(sparrow$sparrowN))
-sparrow$sparrowPStd <- standardize(as.vector(sparrow$sparrowP))
-sparrow$sparrowNPStd <- standardize(as.vector(sparrow$sparrowNP))
-sparrow$FIPS_CODE_LONG <- apply(as.matrix(sparrow$FIPS_CODE_LONG), 1, prefix, len = 5, pre = "0")
-
-natureServeCounties@data <- join(natureServeCounties@data, sparrow, by = "FIPS_CODE_LONG", type = 'left')
-
-rm(sparrow)
-
-
-#### add railroads to NatureServeCounties ####
-railroads <- read.csv('H:/Global Change Program/GIS/Transportation/Railroads/counties_railroad_km.csv')
-
-
-railroads <- railroads[ , c('FIPS_CODE_LONG', 'railDensity')]
-
-railroads$railDensityStd <- standardize(railroads$railDensity)
-railroads$FIPS_CODE_LONG <- apply(as.matrix(railroads$FIPS_CODE_LONG), 1, prefix, len = 5, pre = "0")
-
-natureServeCounties@data <- join(natureServeCounties@data, railroads, by = 'FIPS_CODE_LONG', type ='left')
-rm(railroads)
-
-
-#### Add oil and gas wells to natureServeCounties ####
-oilGas <- read.csv('H:/Global Change Program/GIS/Energy/Oil & Gas Wells - FracTracker.org/nscOilAndGasWells.csv')
-oilGas <- oilGas[, 2:3]
-colnames(oilGas) <- c('FIPS_CODE_LONG', 'nOilGasWells')
-oilGas$nOilGasWellsStd <- standardize(as.vector(oilGas$nOilGasWells))
-oilGas$FIPS_CODE_LONG <- apply(as.matrix(oilGas$FIPS_CODE_LONG), 1, prefix, len = 5, pre = "0")
-
-natureServeCounties@data <- join(natureServeCounties@data, oilGas, by = 'FIPS_CODE_LONG', type = 'left')
-rm(oilGas)
-
-
-#### Add oil pipelines to natureServeCounties ####
-oilPipelines <- read.csv('H:/Global Change Program/GIS/Energy/CrudeOil_Pipelines_US_EIA/natureServeCounties_PipelineLength.csv')
-oilPipelines <- oilPipelines[ , c('FIPS_CODE_LONG', 'PipelineLength.PerArea')]
-colnames(oilPipelines) <- c('FIPS_CODE_LONG', 'pipelineLengthPerArea')
-oilPipelines$pipelineLengthPerAreaStd <- standardize(oilPipelines$pipelineLengthPerArea)
-oilPipelines$FIPS_CODE_LONG <- apply(as.matrix(oilPipelines$FIPS_CODE_LONG), 1, prefix, len = 5, pre = "0")
-
-natureServeCounties@data <- join(natureServeCounties@data, oilPipelines, by = 'FIPS_CODE_LONG', type = 'left')
-
-rm(oilPipelines)
-
-
-#### add shale plays to natureServeCounties ####
-shale <- read.csv('H:/Global Change Program/GIS/Energy/Shale Plays - US Energy Information Administration/nscShalePlays.csv')
-shale <- shale[ , c('FIPS_CODE_LONG', 'PERCENT_SHALE_PLAY')]
-colnames(shale) <- c('FIPS_CODE_LONG', 'percentShalePlay')
-shale$percentShalePlayStd <- standardize(as.vector(shale$percentShalePlay))
-shale$FIPS_CODE_LONG <- apply(as.matrix(shale$FIPS_CODE_LONG), 1, prefix, len = 5, pre = "0")
-
-natureServeCounties@data <- join(natureServeCounties@data, shale, by = 'FIPS_CODE_LONG', type = "left")
-rm(shale)
-
-
-#### Add coal mines to natureServeCounties ####
-
-coalMines <- read.csv('H:/Global Change Program/GIS/Energy/CoalMines_US_EIA/nscCoalMines.csv')
-coalMines <- coalMines[ , c('FIPS_CODE_LONG', 'nCoalMines')]
-
-coalMines$nCoalMinesStd <- standardize(as.vector(coalMines$nCoalMines))
-coalMines$FIPS_CODE_LONG <- apply(as.matrix(coalMines$FIPS_CODE_LONG), 1, prefix, len = 5, pre = "0")
-
-natureServeCounties@data <- join(natureServeCounties@data, coalMines, by = 'FIPS_CODE_LONG', type = 'left')
-
-rm(coalMines)
-
-rm(standardize)
-
+#
+# # NLCD Percent developed imperviousness
+# imperviousness <- read.csv('H:/Global Change Program/GIS/Land use/NCLD Developed Imperviousness 2011/percentImpervious.csv')
+# imperviousness <- imperviousness[ , c('FIPS_CODE_LONG', 'Percent.Impervious')]
+# colnames(imperviousness) <- c('FIPS_CODE_LONG', 'percentImperv')
+# imperviousness$percentImpervStd <- standardize(as.vector(imperviousness$percentImperv))
+# imperviousness$FIPS_CODE_LONG <- apply(as.matrix(imperviousness$FIPS_CODE_LONG), 1, prefix, len = 5, pre = "0")
+#
+# natureServeCounties@data <- join(natureServeCounties@data, imperviousness, by = "FIPS_CODE_LONG", type = 'left')
+#
+# rm(imperviousness)
+#
+#
+# # SPARROW N and P pollution
+# sparrow <- read.csv('H:/Global Change Program/GIS/Human Impact & Development/Water quality/EPA SPARROW models/SPARROW 2002 Nitrogen and Phosphorous Pollution/meanYieldsByCounty.csv')
+# sparrow <- sparrow[ , c('FIPS_CODE_LONG', 'meanNitrogenYield', 'meanPhosphorusYield')]
+# colnames(sparrow) <- c('FIPS_CODE_LONG', 'sparrowN', 'sparrowP')
+# sparrow$sparrowNP <- sparrow$sparrowN + sparrow$sparrowP
+# sparrow$sparrowNStd <- standardize(as.vector(sparrow$sparrowN))
+# sparrow$sparrowPStd <- standardize(as.vector(sparrow$sparrowP))
+# sparrow$sparrowNPStd <- standardize(as.vector(sparrow$sparrowNP))
+# sparrow$FIPS_CODE_LONG <- apply(as.matrix(sparrow$FIPS_CODE_LONG), 1, prefix, len = 5, pre = "0")
+#
+# natureServeCounties@data <- join(natureServeCounties@data, sparrow, by = "FIPS_CODE_LONG", type = 'left')
+#
+# rm(sparrow)
+#
+# # Railroads
+# railroads <- read.csv('H:/Global Change Program/GIS/Transportation/Railroads/counties_railroad_km.csv')
+#
+#
+# railroads <- railroads[ , c('FIPS_CODE_LONG', 'railDensity')]
+#
+# railroads$railDensityStd <- standardize(railroads$railDensity)
+# railroads$FIPS_CODE_LONG <- apply(as.matrix(railroads$FIPS_CODE_LONG), 1, prefix, len = 5, pre = "0")
+#
+# natureServeCounties@data <- join(natureServeCounties@data, railroads, by = 'FIPS_CODE_LONG', type ='left')
+# rm(railroads)
+#
+#
+# # Oil and gas wells
+# oilGas <- read.csv('H:/Global Change Program/GIS/Energy/Oil & Gas Wells - FracTracker.org/nscOilAndGasWells.csv')
+# oilGas <- oilGas[, 2:3]
+# colnames(oilGas) <- c('FIPS_CODE_LONG', 'nOilGasWells')
+# oilGas$nOilGasWellsStd <- standardize(as.vector(oilGas$nOilGasWells))
+# oilGas$FIPS_CODE_LONG <- apply(as.matrix(oilGas$FIPS_CODE_LONG), 1, prefix, len = 5, pre = "0")
+#
+# natureServeCounties@data <- join(natureServeCounties@data, oilGas, by = 'FIPS_CODE_LONG', type = 'left')
+# rm(oilGas)
+#
+# # Oil pipelines
+# oilPipelines <- read.csv('H:/Global Change Program/GIS/Energy/CrudeOil_Pipelines_US_EIA/natureServeCounties_PipelineLength.csv')
+# oilPipelines <- oilPipelines[ , c('FIPS_CODE_LONG', 'PipelineLength.PerArea')]
+# colnames(oilPipelines) <- c('FIPS_CODE_LONG', 'pipelineLengthPerArea')
+# oilPipelines$pipelineLengthPerAreaStd <- standardize(oilPipelines$pipelineLengthPerArea)
+# oilPipelines$FIPS_CODE_LONG <- apply(as.matrix(oilPipelines$FIPS_CODE_LONG), 1, prefix, len = 5, pre = "0")
+#
+# natureServeCounties@data <- join(natureServeCounties@data, oilPipelines, by = 'FIPS_CODE_LONG', type = 'left')
+#
+# rm(oilPipelines)
+#
+# # Shale plays
+# shale <- read.csv('H:/Global Change Program/GIS/Energy/Shale Plays - US Energy Information Administration/nscShalePlays.csv')
+# shale <- shale[ , c('FIPS_CODE_LONG', 'PERCENT_SHALE_PLAY')]
+# colnames(shale) <- c('FIPS_CODE_LONG', 'percentShalePlay')
+# shale$percentShalePlayStd <- standardize(as.vector(shale$percentShalePlay))
+# shale$FIPS_CODE_LONG <- apply(as.matrix(shale$FIPS_CODE_LONG), 1, prefix, len = 5, pre = "0")
+#
+# natureServeCounties@data <- join(natureServeCounties@data, shale, by = 'FIPS_CODE_LONG', type = "left")
+# rm(shale)
+#
+#
+# # Coal mines
+# coalMines <- read.csv('H:/Global Change Program/GIS/Energy/CoalMines_US_EIA/nscCoalMines.csv')
+# coalMines <- coalMines[ , c('FIPS_CODE_LONG', 'nCoalMines')]
+#
+# coalMines$nCoalMinesStd <- standardize(as.vector(coalMines$nCoalMines))
+# coalMines$FIPS_CODE_LONG <- apply(as.matrix(coalMines$FIPS_CODE_LONG), 1, prefix, len = 5, pre = "0")
+#
+# natureServeCounties@data <- join(natureServeCounties@data, coalMines, by = 'FIPS_CODE_LONG', type = 'left')
+#
+# rm(coalMines)
+#
+# rm(standardize)
 
 
 #### Load and tally threats ####
