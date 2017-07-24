@@ -2760,47 +2760,49 @@ cat('\n', date(), '\n'); flush.console()
 # rm(coalMines)
 #
 # rm(standardize)
-
-
-#### Load and tally threats ####
-
-speciesThreats <- read.csv('H:/Global Change Program/Research/Multi-Threat Assessment/Threatened Species Data (NatureServe)/Data/Working/56a Master Copy, Assessed Species 2015-08-16 1=past OR present OR future 0=no threat Re-added 7.3 Other modif.csv')
-natureServeCountyOccurrence <- read.csv('//mbgcl02fs/usersdatavol2/CCSD/shared/Global Change Program/Research/Multi-Threat Assessment/Threatened Species Data (NatureServe)/Data/Working/00_NS_mv_CTY_G12ESA_list_201403 - County Occurrences.csv')
-
-# format FIPS codes correctly
-natureServeCountyOccurrence$FIPS_CODE_LONG <- apply(as.matrix(natureServeCountyOccurrence$FIPS_CD), 1, prefix, len = 5, pre = "0")
-
-# filter to plants
-speciesThreats <- speciesThreats[ which(speciesThreats$KINGDOM == "Plantae"), ]
-natureServeCountyOccurrence <- natureServeCountyOccurrence[ which(natureServeCountyOccurrence$INFORMAL_TAX == "Ferns and relatives" | natureServeCountyOccurrence$INFORMAL_TAX == "Conifers and relatives" | natureServeCountyOccurrence$INFORMAL_TAX == "Hornworts" | natureServeCountyOccurrence$INFORMAL_TAX == "Liverworts" | natureServeCountyOccurrence$INFORMAL_TAX == "Mosses" | natureServeCountyOccurrence$INFORMAL_TAX == "Flowering Plants"), ]
-
-
-# tally number of species found in each county
-
-findCountyOccurrences <- function(FIPS_CODE){
-  countyOccurrences <- grep(FIPS_CODE, natureServeCountyOccurrence$FIPS_CODE_LONG)
-  return(as.numeric(length(countyOccurrences)))
-}
-
-natureServeCounties$speciesInCounty <- apply(as.matrix(natureServeCounties$FIPS_CODE_LONG), 1, findCountyOccurrences)
-
-# add conglomerate threats to speciesThreats
-
-combineThreats <- function(i, threats) {
-  union <- max(speciesThreats[i, threats])
-  return(union)
-}
-
-speciesThreats$c1p0x1x2x3_allDev <- unlist(sapply(1:nrow(speciesThreats), combineThreats, threats = c('c1p0_residComm', 'c1p1_resident', 'c1p2_comm', 'c1p3_tourDev')))
-speciesThreats$c2p0x1x2x3_allAg <- unlist(sapply(1:nrow(speciesThreats), combineThreats, threats = c('c2p0_ag', 'c2pt1_crops', 'c2pt2_plantation', 'c2pt3_livestock')))
-speciesThreats$c2p1x3_cropsLive <- unlist(sapply(1:nrow(speciesThreats), combineThreats, threats = c('c2pt1_crops', 'c2pt3_livestock')))
-speciesThreats$c6p1p0x1x2_allRec <- unlist(sapply(1:nrow(speciesThreats), combineThreats, threats = c('c6p1p0_rec', 'c6p1p1_hiking', 'c6p1p2_orv')))
-speciesThreats$c6p0x1_allHumanInt <- unlist(sapply(1:nrow(speciesThreats), combineThreats, threats = c('c6p0_intrusion', 'c6p1p1_hiking', 'c6p1p2_orv', 'c6p2_war', 'c6p3_work')))
-speciesThreats$c9p0x3_pollUnspAg <- unlist(sapply(1:nrow(speciesThreats), combineThreats, threats = c('c9p0_pollution', 'c9p3_agPollution')))
-speciesThreats$anyThreat <- unlist(sapply(1:nrow(speciesThreats), combineThreats, threats = c(40:90)))
-speciesThreats$allRoads <- unlist(sapply(1:nrow(speciesThreats), combineThreats, threats = c('c4p0_transport', 'c4p1p0_roads', 'c4p1p2_roadConst')))
 #
-# # function to tally number of species (regardless of endemism) affected by each threat in each county
+#
+#
+#### Prepare data for stan
+# # Load threat and species occurrence data
+#
+# speciesThreats <- read.csv('H:/Global Change Program/Research/Multi-Threat Assessment/Threatened Species Data (NatureServe)/Data/Working/56a Master Copy, Assessed Species 2015-08-16 1=past OR present OR future 0=no threat Re-added 7.3 Other modif.csv')
+# natureServeCountyOccurrence <- read.csv('//mbgcl02fs/usersdatavol2/CCSD/shared/Global Change Program/Research/Multi-Threat Assessment/Threatened Species Data (NatureServe)/Data/Working/00_NS_mv_CTY_G12ESA_list_201403 - County Occurrences.csv')
+#
+# # Format FIPS codes correctly
+# natureServeCountyOccurrence$FIPS_CODE_LONG <- apply(as.matrix(natureServeCountyOccurrence$FIPS_CD), 1, prefix, len = 5, pre = "0")
+#
+# # Filter to plants
+# speciesThreats <- speciesThreats[ which(speciesThreats$KINGDOM == "Plantae"), ]
+# natureServeCountyOccurrence <- natureServeCountyOccurrence[ which(natureServeCountyOccurrence$INFORMAL_TAX == "Ferns and relatives" | natureServeCountyOccurrence$INFORMAL_TAX == "Conifers and relatives" | natureServeCountyOccurrence$INFORMAL_TAX == "Hornworts" | natureServeCountyOccurrence$INFORMAL_TAX == "Liverworts" | natureServeCountyOccurrence$INFORMAL_TAX == "Mosses" | natureServeCountyOccurrence$INFORMAL_TAX == "Flowering Plants"), ]
+#
+#
+# # Tally number of species found in each county
+# findCountyOccurrences <- function(FIPS_CODE){
+#   countyOccurrences <- grep(FIPS_CODE, natureServeCountyOccurrence$FIPS_CODE_LONG)
+#   return(as.numeric(length(countyOccurrences)))
+# }
+#
+# natureServeCounties$speciesInCounty <- apply(as.matrix(natureServeCounties$FIPS_CODE_LONG), 1, findCountyOccurrences)
+#
+#
+# # Add conglomerate threats to speciesThreats
+# combineThreats <- function(i, threats) {
+#   union <- max(speciesThreats[i, threats])
+#   return(union)
+# }
+#
+# speciesThreats$c1p0x1x2x3_allDev <- unlist(sapply(1:nrow(speciesThreats), combineThreats, threats = c('c1p0_residComm', 'c1p1_resident', 'c1p2_comm', 'c1p3_tourDev')))
+# speciesThreats$c2p0x1x2x3_allAg <- unlist(sapply(1:nrow(speciesThreats), combineThreats, threats = c('c2p0_ag', 'c2pt1_crops', 'c2pt2_plantation', 'c2pt3_livestock')))
+# speciesThreats$c2p1x3_cropsLive <- unlist(sapply(1:nrow(speciesThreats), combineThreats, threats = c('c2pt1_crops', 'c2pt3_livestock')))
+# speciesThreats$c6p1p0x1x2_allRec <- unlist(sapply(1:nrow(speciesThreats), combineThreats, threats = c('c6p1p0_rec', 'c6p1p1_hiking', 'c6p1p2_orv')))
+# speciesThreats$c6p0x1_allHumanInt <- unlist(sapply(1:nrow(speciesThreats), combineThreats, threats = c('c6p0_intrusion', 'c6p1p1_hiking', 'c6p1p2_orv', 'c6p2_war', 'c6p3_work')))
+# speciesThreats$c9p0x3_pollUnspAg <- unlist(sapply(1:nrow(speciesThreats), combineThreats, threats = c('c9p0_pollution', 'c9p3_agPollution')))
+# speciesThreats$anyThreat <- unlist(sapply(1:nrow(speciesThreats), combineThreats, threats = c(40:90)))
+# speciesThreats$allRoads <- unlist(sapply(1:nrow(speciesThreats), combineThreats, threats = c('c4p0_transport', 'c4p1p0_roads', 'c4p1p2_roadConst')))
+#
+#
+# # Option to tally number of species (regardless of endemism) affected by each threat in each county
 # countSpeciesThreatened <- function(CTY_FIPS, threat){
 #   natureServeCountyIndex <- as.numeric(match(CTY_FIPS, natureServeCounties$FIPS_CODE_LONG))
 #   if (natureServeCounties$speciesInCounty[natureServeCountyIndex] == 0) return(0)
@@ -2821,7 +2823,7 @@ speciesThreats$allRoads <- unlist(sapply(1:nrow(speciesThreats), combineThreats,
 # }
 #
 #
-# # tally number of species threatened by a threat
+# # Tally number of species threatened by a threat
 # countSpeciesThreatenedByThreat <- function(threatName) {
 #
 #   threat <- threatName
@@ -2834,6 +2836,7 @@ speciesThreats$allRoads <- unlist(sapply(1:nrow(speciesThreats), combineThreats,
 #   return(threatCol)
 # }
 # #
+# ## add species affected by each threat in each county to nSC
 # # natureServeCountiesT <- natureServeCounties
 # # natureServeCountiesT$Index <- row.names(natureServeCountiesT@data)
 # # T <- as.data.frame(countSpeciesThreatenedByThreat('c11p3x4_tempPrecip'))
@@ -2870,12 +2873,13 @@ speciesThreats$allRoads <- unlist(sapply(1:nrow(speciesThreats), combineThreats,
 # rm(findCountyOccurrences)
 # rm(natureServeCountyOccurrence)
 # rm(speciesThreats)
-
-natureServeCountiesThreats <- read.csv('H:/Global Change Program/Research/Multi-Threat Assessment/Analysis - Threat Mapping/natureServeCountiesThreats.csv')
-colnames(natureServeCountiesThreats)
-natureServeCountiesThreats <- natureServeCountiesThreats[c(17, 19:78)]
-
-natureServeCounties@data <- join(natureServeCounties@data, natureServeCountiesThreats, by = 'FIPS_CODE_LONG', type = 'left')
+#
+# # Join # of species threatened by each threat with threat layer data
+# natureServeCountiesThreats <- read.csv('H:/Global Change Program/Research/Multi-Threat Assessment/Analysis - Threat Mapping/natureServeCountiesThreats.csv')
+# colnames(natureServeCountiesThreats)
+# natureServeCountiesThreats <- natureServeCountiesThreats[c(17, 19:78)]
+# 
+# natureServeCounties@data <- join(natureServeCounties@data, natureServeCountiesThreats, by = 'FIPS_CODE_LONG', type = 'left')
 
 natureServeCounties$X_zeros <- 0
 natureServeCounties$X_zeros <- as.numeric(natureServeCounties$X_zeros)
