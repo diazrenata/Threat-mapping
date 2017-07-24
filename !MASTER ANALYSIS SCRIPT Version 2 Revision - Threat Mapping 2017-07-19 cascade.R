@@ -80,10 +80,11 @@ cat('\n', date(), '\n'); flush.console()
 
 ### THREAT MAPPING ANALYSIS ###
 ### Gather threats data ###
-### add threat columns to natureServeCounties shapefile ###
-### analysis with stan ###
+### Add predictor columns to natureServeCounties ###
+### Prepare species threat and county occurrence data for stan ###
+### Run stan models ###
 
-#### Gather threats data ####
+### Gather threats data ###
 # load prefix function
 # load natureServeCounties and add leading zeros to FIPS codes
 # Climate change
@@ -2395,7 +2396,7 @@ cat('\n', date(), '\n'); flush.console()
 #
 #
 #
-#### Add predictor columns to natureServeCounties ####
+### Add predictor columns to natureServeCounties ###
 # Function to standardize columns with mean 0 and standard deviation 1
 # Climate change regressions
 # Climate stability
@@ -2417,7 +2418,6 @@ cat('\n', date(), '\n'); flush.console()
 # Oil pipelines
 # Shale plays
 # Coal mines
-#
 #
 #
 # # Function to standardize columns with mean 0 and standard deviation 1
@@ -2763,7 +2763,20 @@ cat('\n', date(), '\n'); flush.console()
 #
 #
 #
-#### Prepare data for stan
+### Prepare species threat and county occurrence data for stan ###
+# # Load threat and species occurrence data
+# # Tally number of species found in each county
+# # Add conglomerate threats to speciesThreats
+# # Option to:
+# ## tally number of species (regardless of endemism) affected by each threat in each county
+# ## tally number of species threatened by a threat
+# ## add species affected by each threat in each county to nSC
+# # Alternatively, just add species threatened by all different threats to nSC and save (.csv)
+# # Join # of species threatened by each threat with threat layer data (shapefile)
+# # Add blank (zeros) predictor column to natureServeCounties
+# # Save natureServeCounties with all the data in it
+# # Save speciesThreats with all (including conglomerate) threats
+#
 # # Load threat and species occurrence data
 #
 # speciesThreats <- read.csv('H:/Global Change Program/Research/Multi-Threat Assessment/Threatened Species Data (NatureServe)/Data/Working/56a Master Copy, Assessed Species 2015-08-16 1=past OR present OR future 0=no threat Re-added 7.3 Other modif.csv')
@@ -2878,22 +2891,26 @@ cat('\n', date(), '\n'); flush.console()
 # natureServeCountiesThreats <- read.csv('H:/Global Change Program/Research/Multi-Threat Assessment/Analysis - Threat Mapping/natureServeCountiesThreats.csv')
 # colnames(natureServeCountiesThreats)
 # natureServeCountiesThreats <- natureServeCountiesThreats[c(17, 19:78)]
-# 
+#
 # natureServeCounties@data <- join(natureServeCounties@data, natureServeCountiesThreats, by = 'FIPS_CODE_LONG', type = 'left')
+#
+# # Add blank (zeros) predictor column to natureServeCounties
+# natureServeCounties$X_zeros <- 0
+# natureServeCounties$X_zeros <- as.numeric(natureServeCounties$X_zeros)
+#
+# # Save natureServeCounties with all the data in it
+#
+# saveCols <- colnames(natureServeCounties@data)
+# write.table(saveCols, 'H:/Global Change Program/Research/Multi-Threat Assessment/Analysis - Threat Mapping/Data for stan/natureServeCounties0713/cols.txt')
+#
+# writeOGR(natureServeCounties, 'H:/Global Change Program/Research/Multi-Threat Assessment/Analysis - Threat Mapping/Data for stan/natureServeCounties0713', layer = 'natureServeCounties', driver = 'ESRI Shapefile', layer_options = 'RESIZE = YES', check_exists = TRUE, overwrite_layer = TRUE)
+#
+# rm(natureServeCounties)
+#
+# # Save speciesThreats with all (including conglomerate) threats
+# write.csv(speciesThreats, 'H:/Global Change Program/Research/Multi-Threat Assessment/Analysis - Threat Mapping/Data for stan/natureServeCounties0713/speciesThreats.csv')
 
-natureServeCounties$X_zeros <- 0
-natureServeCounties$X_zeros <- as.numeric(natureServeCounties$X_zeros)
-
-saveCols <- colnames(natureServeCounties@data)
-write.table(saveCols, 'H:/Global Change Program/Research/Multi-Threat Assessment/Analysis - Threat Mapping/Data for stan/natureServeCounties0713/cols.txt')
-
-writeOGR(natureServeCounties, 'H:/Global Change Program/Research/Multi-Threat Assessment/Analysis - Threat Mapping/Data for stan/natureServeCounties0713', layer = 'natureServeCounties', driver = 'ESRI Shapefile', layer_options = 'RESIZE = YES', check_exists = TRUE, overwrite_layer = TRUE)
-
-rm(natureServeCounties)
-
-write.csv(speciesThreats, 'H:/Global Change Program/Research/Multi-Threat Assessment/Analysis - Threat Mapping/Data for stan/natureServeCounties0713/speciesThreats.csv')
-
-
+### Run stan models ###
 #### CAR stan cascade ####
 #### cascade start ####
 
