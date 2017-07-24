@@ -4,8 +4,10 @@
 
 # source('C:/ecology/Drive/Research/Multi-Threat Assessment/Analysis - Threat Mapping/!MASTER ANALYSIS SCRIPT Version 2 Revision - Threat Mapping 2017-01-18.r')
 
-#install.packages(c('sp', 'rgdal', 'raster', 'dismo','rgeos','geosphere','scales','RColorBrewer','TeachingDemos', 'doBy', 'phangorn', 'vegan', 'plyr', 'rgrass7','rstan','shinystan','RPushbullet'))
-# you will eventually need to load rstan, but if you load it now it interferes with raster::extract()
+
+
+## Install necessary packages
+# install.packages(c('sp', 'rgdal', 'raster', 'dismo','rgeos','geosphere','scales','RColorBrewer','TeachingDemos', 'doBy', 'phangorn', 'vegan', 'plyr', 'rgrass7','rstan','shinystan','RPushbullet'))
 
 
 memory.limit(memory.limit() * 2^30)
@@ -101,7 +103,7 @@ prefix <- function(x, len, pre='0') {
 }
 
 
-# # load nSC and format FIPS
+# # load natureServeCounties and add leading zeros to FIPS codes
 # natureServeCounties <- shapefile('H:/Global Change Program/Research/Multi-Threat Assessment/Threatened Species Data (NatureServe)/Data/ORIGINAL/NS_mv_CTY_bdrys_G12ESAtots_201403')
 # natureServeCounties$FIPS_CODE_LONG <- apply(as.matrix(natureServeCounties$FIPS), 1, prefix, len = 5, pre = "0")
 
@@ -275,13 +277,10 @@ prefix <- function(x, len, pre='0') {
 # write.csv(natureServeCountiesClimate, 'H:/Global Change Program/GIS/Climate/PRISM/2 arcmin/climate_change/regressions/natureServeCounties_withAllRegressions.csv')
 
 
-#### Climate stability  ####
+# ##  Climate stability  ##
 
-#### Calculate bioclim variables for entire US for every year. ####
-### Currently ignoring driest quarter paradox. This would be where to deal with it, though.
-
-# only do this once #
-#yearlyBioclim <- function(year) {
+# # Calculate bioclim variables for entire US for every year.
+# yearlyBioclim <- function(year) {
 #  tminDir <- 'H:/Global Change Program/GIS/Climate/PRISM/2 arcmin/tmin'
 #  tmaxDir <- 'H:/Global Change Program/GIS/Climate/PRISM/2 arcmin/tmax'
 #  precipDir <- 'H:/Global Change Program/GIS/Climate/PRISM/2 arcmin/ppt'
@@ -305,10 +304,9 @@ prefix <- function(x, len, pre='0') {
 #years <- as.matrix(years)
 #apply(years, 1, yearlyBioclim)
 
-
-#### Get one dataframe of all variables for all pixels for all years ###
-### Columns are bio1, bio2, bio7, bio12, bio15, bio17.
-### Rows are cell-years from the entire-US raster files.
+# # Get one dataframe of all variables for all pixels for all years
+# # Columns are bio1, bio2, bio7, bio12, bio15, bio17.
+# # Rows are cell-years from the entire-US rasters.
 
 # getBioVarDf <- function(bioVariable) {
 #  workDir <- 'H:/Global Change Program/GIS/Climate/PRISM/2 arcmin/biovars_annual'
