@@ -4,7 +4,7 @@
 # ncores = integer how many cores to use
 # CAR = true/false use CAR?
 # scramble = true/false randomly reassign attributes to counties
-# justEndemic = true/false restrict to species found in only 1 county?
+# justEndemics = true/false restrict to species found in only 1 county?
 
 runStanModel <- function(threat, predictors, states, ncores, CAR, scramble, justEndemics){
   # load packages
