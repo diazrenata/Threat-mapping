@@ -612,7 +612,7 @@ results <- results[,resultnames]
   thisrow <- matrix(data = thisrow, nrow = 1, ncol = length(resultnames), dimnames = list(NULL, resultnames))
   results <- rbind(results, thisrow)
   write.csv(results, 'H:/Global Change Program/Research/Multi-Threat Assessment/Analysis - Threat Mapping/CAR beginning 07132017/CountyEndangeredSpecies-master/results.csv', row.names = FALSE)
-
+write.table('done', paste0(workPath, '/done.txt')
 # clear workspace and quit this instance of R
   rm(list=ls())
   gc()
