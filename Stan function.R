@@ -639,7 +639,7 @@ runStanModel <- function(threat, predictors, states, ncores, CAR, scramble, just
                random_lh_mean, random_lh_2pt5, obs_lh_mean, obs_lh_97pt5, logloss_random_mean, logloss_random_2pt5, logloss_obs_mean, logloss_obs_97pt5, logloss_calc_p_mean ,logloss_calc_p_97pt5, logloss_notGeo_mean, logloss_notGeo_97pt5, logloss_justX_mean, logloss_justX_97pt5, rsquared_log.mean, rsquared_log.2pt5, rsquared_log.97pt5, rsquared.justX_log.mean,
                rsquared.justX_log.2pt5, rsquared.justX_log.97pt5, rsquared.notGeo_log.mean, rsquared.notGeo_log.2pt5, rsquared.notGeo_log.97pt5, alpha_mean)
   if (length(thisrow) < 28) return()
-  thisrow <- matrix(data = thisrow, nrow = 1, ncol = 52, dimnames = list('NA', resultnames))
+  thisrow <- matrix(data = thisrow, nrow = 1, ncol = length(thisrow), dimnames = list('NA', resultnames))
   results <- rbind(results, thisrow)
   write.csv(results, 'H:/Global Change Program/Research/Multi-Threat Assessment/Analysis - Threat Mapping/CAR beginning 07132017/CountyEndangeredSpecies-master/results.csv', row.names = FALSE)
   shapefile(resultsShape, filename = paste0(workPath, "/resultsShape.shp"))
