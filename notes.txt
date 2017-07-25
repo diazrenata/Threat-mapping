@@ -1,0 +1,21 @@
+fix r2 order
+apportion r2 among states, car, x
+compare logloss to random - %of states
+
+small alpha == small autocorrelation
+
+map to make:
+mean of b * 
+
+map geo_effect
+
+residuals: log(p_calc) 
+
+plot residuals; if there is a spatial patt`ern in non-geo residuals there is un handled spatial autocorrelation
+
+non spatial residuals stFALSE“error” plot and look for spatial pattern; if there’s a state pattern —> need states
+
+non spatial residuals stTRUE “error” plot if there’s a pattern need CAR
+
+try some with only endemics
+
