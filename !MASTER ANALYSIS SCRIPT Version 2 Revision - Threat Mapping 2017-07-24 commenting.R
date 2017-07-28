@@ -2946,7 +2946,7 @@ runStanModel(threat = 'anyThreat', predictors = c('venterHFIStd'), states = TRUE
 runStanModel(threat = 'anyThreat', predictors = c('venterHFIStd'), states = TRUE, ncores = 4, CAR = F, scramble = FALSE, justEndemics = FALSE, islands = T)
 runStanModel(threat = 'c2pt3_livestock', predictors = c('nlcdPastureStd'), states = TRUE, ncores = 4, CAR = TRUE, scramble = FALSE, justEndemics = FALSE, islands = FALSE)
 
-# 32 4 
+# 32 4
 runStanModel(threat = 'anyThreat', predictors = c('venterHFIStd'), states = F, ncores = 4, CAR = F, scramble = FALSE, justEndemics = FALSE, islands = FALSE)
 runStanModel(threat = 'anyThreat', predictors = c('venterHFIStd'), states = F, ncores = 4, CAR = F, scramble = FALSE, justEndemics = FALSE, islands = T)
 runStanModel(threat = 'c2pt3_livestock', predictors = c('nlcdPastureStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = FALSE)
