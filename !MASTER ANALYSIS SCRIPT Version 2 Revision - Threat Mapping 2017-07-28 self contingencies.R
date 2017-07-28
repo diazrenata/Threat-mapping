@@ -2914,18 +2914,51 @@ cat('\n', date(), '\n'); flush.console()
 #### CAR stan cascade ####
 #### cascade start ####
 
-getFileCheck <- function(threat, predictors, states, ncores, CAR, scramble) {
+# waitOn <- function(threat, predictors, states, ncores, CAR, scramble, justEndemics) {
 
-  predictorString <- predictors[1]
-  if (length(predictors) > 1) {
-    for (i in 2:length(predictors)) {
-      predictorString <- paste(predictorString, predictors[i], sep = "_")
-    }
-  }
-  workPath <- paste0('H:/Global Change Program/Research/Multi-Threat Assessment/Analysis - Threat Mapping/CAR beginning 07132017/CountyEndangeredSpecies-master/CAR Analyses/', threat, "_", predictorString, "_st", states, '_scr', scramble, '_CAR', CAR, "/X.tiff")
-
-  return(workPath)
+runFun <- function(threat, predictors, states, ncores, CAR, scramble, justEndemics) {
+  print(threat)
+  print(predictors)
+  print(states)
+  print(ncores)
+  print(CAR)
+  print(scramble)
+  print(justEndemics)
+  done <- 'done'
+  write.table(done, 'done1.txt')
 }
+
+cueUp <- function(waitOn, toRun) {
+  threat <- waitOn$threat
+  predictors <- waitOn$predictors
+  states <- waitOn$states
+  ncores <- waitOn$ncores
+  CAR <- waitOn$CAR
+  scramble <- waitOn$scramble
+  justEndemics <- waitOn$justEndemics
+
+    predictorString <- predictors[1]
+    if (length(predictors) > 1) {
+      for (i in 2:length(predictors)) {
+        predictorString <- paste(predictorString, predictors[i], sep = "_")
+      }
+    }
+    filename <- paste0('H:/Global Change Program/Research/Multi-Threat Assessment/Analysis - Threat Mapping/CAR beginning 07132017/CountyEndangeredSpecies-master/CAR Analyses/', threat, "_", predictorString, "_st", states, '_scr', scramble, '_CAR', CAR, '_end', justEndemics,  "/done.txt")
+  if (file.exists(filename)) {
+
+   runFun(threat = toRun$threat, predictors = toRun$predictors, states = toRun$states, ncores = toRun$ncores, CAR = toRun$CAR, scramble = toRun$scramble, justEndemics = toRun$justEndemics)
+
+  }
+
+  Sys.sleep(60)
+  cueUp(waitOn, toRun)
+}
+
+waitOn <- list(threat = 'anyThreat', predictors = c('venterHFIStd'), states = TRUE,ncores =  4, CAR = FALSE,scramble = FALSE, justEndemics = FALSE)
+toRun <- list(threat = 'anyThreat', predictors = c('ncldPastureStd'), states = T, ncores = 4, CAR = F, scramble = F, justEndemics = F)
+
+cueUp(waitOn, toRun)
+
 
 
 
