@@ -325,124 +325,124 @@ readStanModel <- function(threat, predictors, states, ncores, CAR, scramble, jus
  # load the model
   load("FitModel_NoEndemics.Rdata")
   
-#   # add modeled parameters to counties shapefile and save plots of spatial parameters (p_est, p_calcs, X)
-#   resultsShape = AdMatrixData$geoDataObject
-#   
-#   
-#   resultsShape@data[AllIncludedFeatures$featureShape,"state_coeff"] = summary(FitModel, pars =paste("a_cat[",1:nHyperP,"]", sep=""))$c_summary[,,1][paste("a_cat[",HyperPAssign,"]", sep=""),"50%"]
-#   resultsShape@data[AdMatrixData$geoInfo$sampledId$featureShape,"p_est"] = summary(FitModel, pars = paste("p[",1:length(AdMatrixData$geoInfo$sampledId$featureShape),"]", sep=""))$c_summary[,,1][,"50%"]
-#   if (CAR == TRUE) resultsShape@data[AllIncludedFeatures$featureShape,"p_calc"] = summary(FitModel, pars = paste("sim_p[",1:length(AllIncludedFeatures$featureShape),"]", sep=""))$c_summary[,,1][,"50%"]
-#   resultsShape@data[AllIncludedFeatures$featureShape,"p_calc_justX"] = summary(FitModel, pars = paste("calc_p_justX[",1:length(AllIncludedFeatures$featureShape),"]", sep=""))$c_summary[,,1][,"50%"]
-#   resultsShape@data[AllIncludedFeatures$featureShape,"p_calc_notGeo"] = summary(FitModel, pars = paste("calc_p_notGeo[",1:length(AllIncludedFeatures$featureShape),"]", sep=""))$c_summary[,,1][,"50%"]
-#   if(CAR == TRUE) resultsShape@data[AllIncludedFeatures$featureShape,"geo_effect"] = summary(FitModel, pars = paste("geo_effect[",1:length(AllIncludedFeatures$featureShape),"]", sep=""))$c_summary[,,1][,"50%"]
-#   if (CAR == TRUE) resultsShape@data <- resultsShape@data[ , c('FIPS_CODE_LONG', 'X', 'STATE_NAME', 'STATEFP', 'Richness', 'detections', 'FeatureID', 'state_coeff', 'p_est', 'p_calc', 'p_calc_justX', 'p_calc_notGeo' ,'geo_effect')]
-#   if (CAR == FALSE) resultsShape@data <- resultsShape@data[ , c('FIPS_CODE_LONG', 'X', 'STATE_NAME', 'STATEFP', 'Richness', 'detections', 'FeatureID', 'state_coeff', 'p_est','p_calc_justX', 'p_calc_notGeo')]
-#   
-#   setwd(workPath)
-#   
-#   labelat = c(.1,.2,.3,.4,.5,.6,.7,.8,.9,1)
-#   labeltext = c('0.1', '0.2','0.3','0.4','0.5','0.6','0.7','0.8','0.9','1.0')
-#   
-#   tiff(paste0(threat, "_", predictorString, "_", 'p_est.tiff'), width = 5000, height = 3000, units = "px")
-#   print( spplot(resultsShape, col="black", zcol="p_est", pretty = TRUE,  main= list(label = paste0(threat, '_', predictorString, " p_est"), cex = 8), colorkey = list(
-#     labels = list(
-#       at = labelat,
-#       labels = labeltext,
-#       cex = 7
-#     )
-#   )))
-#   dev.off()
-#   
-#   if (CAR == TRUE) {
-#     tiff(paste0(threat, "_", predictorString, "_", 'pclc.tiff'), width = 8000, height = 5000, units = "px")
-#     print( spplot(resultsShape, col="black", zcol="p_calc",main= list(label = paste0(threat, '_', predictorString, " p_calc"), cex = 3), pretty = TRUE, colorkey = list(
-#       labels = list(
-#         at = labelat,
-#         labels = labeltext,
-#         cex = 7
-#       )
-#     )))
-#     dev.off()
-#   }
-#   
-#   tiff(paste0(threat, "_", predictorString, "_", 'pclc_nG.tiff'), width = 8000, height = 5000, units = "px")
-#   print(spplot(resultsShape, col="black", zcol="p_calc_notGeo",main= list(label = paste0(threat, '_', predictorString, " p_calc_notGeo"), cex = 3), pretty = TRUE, colorkey = list(
-#     labels = list(
-#       at = labelat,
-#       labels = labeltext,
-#       cex = 7
-#     )
-#   )))
-#   dev.off()
-#   
-#   
-#   tiff(paste0(threat, "_", predictorString, "_", 'pclc_jX.tiff'),width = 8000, height = 5000, units = "px")
-#   print( spplot(resultsShape, col="black", zcol="p_calc_justX", main= list(label = paste0(threat, '_', predictorString, " p_calc_justX"), cex = 3), pretty = TRUE, colorkey = list(
-#     labels = list(
-#       at = labelat,
-#       labels = labeltext,
-#       cex = 7
-#     )
-#   )))
-#   dev.off()
-#   
-#   min <- min(resultsShape$X, na.rm = TRUE)
-#   tenth <- (max(resultsShape$X, na.rm = TRUE) - min)/10
-#   labelXat = c(0:10)
-#   labelXat <- labelXat * tenth
-#   labelXat <- labelXat + min
-#   labelXtext = as.character(labelXat)
-#   labelXtext <- unlist(lapply(labelXtext, function(x) {
-#     y <- substr(x, 0, 4)
-#     return(y)
-#   }))
-#   
-#   
-#   tiff(paste0(threat, "_", predictorString, "_", 'X.tiff'),width = 8000, height = 5000, units = "px")
-#   print( spplot(resultsShape, col="black", zcol="X", main= list(label = paste0(threat, '_', predictorString, " X"), cex = 3),pretty = TRUE, colorkey = list(
-#     labels = list(
-#       at = labelXat,
-#       labels = labelXtext,
-#       cex = 7
-#     )
-#   )))
-#   dev.off()
-#   
-#   # save shapefile
-#   shapefile(resultsShape, filename = paste0(workPath, "/resultsShape.shp"), overwrite = TRUE)
-#   
-#   
-#   # save plots of descriptive parameters (rsq, alpha_tau, ps, likelihood, logloss)
-#   tiff(paste0(threat, "_", predictorString, "_", 'rsq.tiff'), width = 1000, height = 1000, units = "px")
-#   if (CAR == TRUE) print(stan_dens(FitModel,pars = c("r_sq","r_sq_justX", "r_sq_notGeo"),separate_chains = T ) +  labs(title = paste0(threat, '_', predictorString, " rsq")))
-#   if (CAR == FALSE) print(stan_dens(FitModel,pars = c("r_sq_justX", "r_sq_notGeo"),separate_chains = T ))
-#   dev.off()
-#   
-#   if (CAR == TRUE){
-#     
-#     tiff(paste0(threat, "_", predictorString, "_", 'a_t.tiff'), width = 1000, height = 1000, units = "px")
-#     print(stan_dens(FitModel,pars = c("alpha","tau"),separate_chains = T )+  labs(title = paste0(threat, '_', predictorString, " alpha_tau")))
-#     dev.off()
-#     
-#   }
-#   
-#   tiff(paste0(threat, "_", predictorString, "_", 'ps.tiff'), width = 1000, height = 1000, units = "px")
-#   print(stan_dens(FitModel,pars = c("p[1]","p[50]"),separate_chains = T )+  labs(title = paste0(threat, '_', predictorString, " ps")))
-#   dev.off()
-#   
-#   tiff(paste0(threat, "_", predictorString, "_", 'lklhd.tiff'), width = 1000, height = 1000, units = "px")
-#   print(stan_plot(FitModel, pars = c("random_lh", "obs_lh"), show_density=T, ci_level=0.95, outer_level=1)+  labs(title = paste0(threat, '_', predictorString, " likelihood")))
-#   dev.off()
-#   
-#   tiff(paste0(threat, "_", predictorString, "_", 'lglss.tiff'), width = 1000, height = 1000, units = "px")
-#   
-#   if (CAR == TRUE)  print(stan_plot(FitModel, pars = c("logloss_random", "logloss_obs", "logloss_calc_p", "logloss_notGeo", "logloss_justX" ),show_density=T, ci_level=0.95, outer_level=1)+ geom_vline(xintercept=expectedRandomLogLoss, linetype="dashed", color = "red") +  labs(title = paste0(threat, '_', predictorString, " logloss")))
-#   
-#   if (CAR == FALSE)  print(stan_plot(FitModel, pars = c("logloss_random", "logloss_obs", "logloss_notGeo", "logloss_justX" ), show_density=T, ci_level=0.95, outer_level=1)+ geom_vline(xintercept=expectedRandomLogLoss, linetype="dashed", color = "red")+  labs(title = paste0(threat, '_', predictorString, " logloss")))
-#   
-#   dev.off()
-#   
-#   
+  # add modeled parameters to counties shapefile and save plots of spatial parameters (p_est, p_calcs, X)
+  resultsShape = AdMatrixData$geoDataObject
+  
+  
+  resultsShape@data[AllIncludedFeatures$featureShape,"state_coeff"] = summary(FitModel, pars =paste("a_cat[",1:nHyperP,"]", sep=""))$c_summary[,,1][paste("a_cat[",HyperPAssign,"]", sep=""),"50%"]
+  resultsShape@data[AdMatrixData$geoInfo$sampledId$featureShape,"p_est"] = summary(FitModel, pars = paste("p[",1:length(AdMatrixData$geoInfo$sampledId$featureShape),"]", sep=""))$c_summary[,,1][,"50%"]
+  if (CAR == TRUE) resultsShape@data[AllIncludedFeatures$featureShape,"p_calc"] = summary(FitModel, pars = paste("sim_p[",1:length(AllIncludedFeatures$featureShape),"]", sep=""))$c_summary[,,1][,"50%"]
+  resultsShape@data[AllIncludedFeatures$featureShape,"p_calc_justX"] = summary(FitModel, pars = paste("calc_p_justX[",1:length(AllIncludedFeatures$featureShape),"]", sep=""))$c_summary[,,1][,"50%"]
+  resultsShape@data[AllIncludedFeatures$featureShape,"p_calc_notGeo"] = summary(FitModel, pars = paste("calc_p_notGeo[",1:length(AllIncludedFeatures$featureShape),"]", sep=""))$c_summary[,,1][,"50%"]
+  if(CAR == TRUE) resultsShape@data[AllIncludedFeatures$featureShape,"geo_effect"] = summary(FitModel, pars = paste("geo_effect[",1:length(AllIncludedFeatures$featureShape),"]", sep=""))$c_summary[,,1][,"50%"]
+  if (CAR == TRUE) resultsShape@data <- resultsShape@data[ , c('FIPS_CODE_LONG', 'X', 'STATE_NAME', 'STATEFP', 'Richness', 'detections', 'FeatureID', 'state_coeff', 'p_est', 'p_calc', 'p_calc_justX', 'p_calc_notGeo' ,'geo_effect')]
+  if (CAR == FALSE) resultsShape@data <- resultsShape@data[ , c('FIPS_CODE_LONG', 'X', 'STATE_NAME', 'STATEFP', 'Richness', 'detections', 'FeatureID', 'state_coeff', 'p_est','p_calc_justX', 'p_calc_notGeo')]
+  
+  setwd(workPath)
+  
+  labelat = c(.1,.2,.3,.4,.5,.6,.7,.8,.9,1)
+  labeltext = c('0.1', '0.2','0.3','0.4','0.5','0.6','0.7','0.8','0.9','1.0')
+  
+  tiff(paste0(threat, "_", predictorString, "_", 'p_est.tiff'), width = 5000, height = 3000, units = "px")
+  print( spplot(resultsShape, col="black", zcol="p_est", pretty = TRUE,  main= list(label = paste0(threat, '_', predictorString, " p_est"), cex = 8), colorkey = list(
+    labels = list(
+      at = labelat,
+      labels = labeltext,
+      cex = 7
+    )
+  )))
+  dev.off()
+  
+  if (CAR == TRUE) {
+    tiff(paste0(threat, "_", predictorString, "_", 'pclc.tiff'), width = 8000, height = 5000, units = "px")
+    print( spplot(resultsShape, col="black", zcol="p_calc",main= list(label = paste0(threat, '_', predictorString, " p_calc"), cex = 3), pretty = TRUE, colorkey = list(
+      labels = list(
+        at = labelat,
+        labels = labeltext,
+        cex = 7
+      )
+    )))
+    dev.off()
+  }
+  
+  tiff(paste0(threat, "_", predictorString, "_", 'pclc_nG.tiff'), width = 8000, height = 5000, units = "px")
+  print(spplot(resultsShape, col="black", zcol="p_calc_notGeo",main= list(label = paste0(threat, '_', predictorString, " p_calc_notGeo"), cex = 3), pretty = TRUE, colorkey = list(
+    labels = list(
+      at = labelat,
+      labels = labeltext,
+      cex = 7
+    )
+  )))
+  dev.off()
+  
+  
+  tiff(paste0(threat, "_", predictorString, "_", 'pclc_jX.tiff'),width = 8000, height = 5000, units = "px")
+  print( spplot(resultsShape, col="black", zcol="p_calc_justX", main= list(label = paste0(threat, '_', predictorString, " p_calc_justX"), cex = 3), pretty = TRUE, colorkey = list(
+    labels = list(
+      at = labelat,
+      labels = labeltext,
+      cex = 7
+    )
+  )))
+  dev.off()
+  
+  min <- min(resultsShape$X, na.rm = TRUE)
+  tenth <- (max(resultsShape$X, na.rm = TRUE) - min)/10
+  labelXat = c(0:10)
+  labelXat <- labelXat * tenth
+  labelXat <- labelXat + min
+  labelXtext = as.character(labelXat)
+  labelXtext <- unlist(lapply(labelXtext, function(x) {
+    y <- substr(x, 0, 4)
+    return(y)
+  }))
+  
+  
+  tiff(paste0(threat, "_", predictorString, "_", 'X.tiff'),width = 8000, height = 5000, units = "px")
+  print( spplot(resultsShape, col="black", zcol="X", main= list(label = paste0(threat, '_', predictorString, " X"), cex = 3),pretty = TRUE, colorkey = list(
+    labels = list(
+      at = labelXat,
+      labels = labelXtext,
+      cex = 7
+    )
+  )))
+  dev.off()
+  
+  # save shapefile
+  shapefile(resultsShape, filename = paste0(workPath, "/resultsShape.shp"), overwrite = TRUE)
+  
+  
+  # save plots of descriptive parameters (rsq, alpha_tau, ps, likelihood, logloss)
+  tiff(paste0(threat, "_", predictorString, "_", 'rsq.tiff'), width = 1000, height = 1000, units = "px")
+  if (CAR == TRUE) print(stan_dens(FitModel,pars = c("r_sq","r_sq_justX", "r_sq_notGeo"),separate_chains = T ) +  labs(title = paste0(threat, '_', predictorString, " rsq")))
+  if (CAR == FALSE) print(stan_dens(FitModel,pars = c("r_sq_justX", "r_sq_notGeo"),separate_chains = T ))
+  dev.off()
+  
+  if (CAR == TRUE){
+    
+    tiff(paste0(threat, "_", predictorString, "_", 'a_t.tiff'), width = 1000, height = 1000, units = "px")
+    print(stan_dens(FitModel,pars = c("alpha","tau"),separate_chains = T )+  labs(title = paste0(threat, '_', predictorString, " alpha_tau")))
+    dev.off()
+    
+  }
+  
+  tiff(paste0(threat, "_", predictorString, "_", 'ps.tiff'), width = 1000, height = 1000, units = "px")
+  print(stan_dens(FitModel,pars = c("p[1]","p[50]"),separate_chains = T )+  labs(title = paste0(threat, '_', predictorString, " ps")))
+  dev.off()
+  
+  tiff(paste0(threat, "_", predictorString, "_", 'lklhd.tiff'), width = 1000, height = 1000, units = "px")
+  print(stan_plot(FitModel, pars = c("random_lh", "obs_lh"), show_density=T, ci_level=0.95, outer_level=1)+  labs(title = paste0(threat, '_', predictorString, " likelihood")))
+  dev.off()
+  
+  tiff(paste0(threat, "_", predictorString, "_", 'lglss.tiff'), width = 1000, height = 1000, units = "px")
+  
+  if (CAR == TRUE)  print(stan_plot(FitModel, pars = c("logloss_random", "logloss_obs", "logloss_calc_p", "logloss_notGeo", "logloss_justX" ),show_density=T, ci_level=0.95, outer_level=1)+ geom_vline(xintercept=expectedRandomLogLoss, linetype="dashed", color = "red") +  labs(title = paste0(threat, '_', predictorString, " logloss")))
+  
+  if (CAR == FALSE)  print(stan_plot(FitModel, pars = c("logloss_random", "logloss_obs", "logloss_notGeo", "logloss_justX" ), show_density=T, ci_level=0.95, outer_level=1)+ geom_vline(xintercept=expectedRandomLogLoss, linetype="dashed", color = "red")+  labs(title = paste0(threat, '_', predictorString, " logloss")))
+  
+  dev.off()
+  
+  
   # save results to results.csv
   results <- read.csv('H:/Global Change Program/Research/Multi-Threat Assessment/Analysis - Threat Mapping/CAR beginning 07132017/CountyEndangeredSpecies-master/results.csv')
   resultnames <- c('threat', 'b1', 'b2', 'states', 'scrambled', 'CAR', 'justEndemics', 'islands', 'a.rhat', 'a.mean', 'a.2pt5', 'a.97pt5', 'b1.rhat', 'b1.mean', 'b1.2pt5', 'b1.95pt5', 'b1.sig', 'b2.rhat', 'b2.mean', 'b2.2pt5', 'b2.97pt5', 'b2.sig', 'rsquared.mean', 'rsquared.2pt5', 'rsquared.97.5', 'rsquared.justX.mean', 'rsquared.justX.2pt5', 'rsquared.justX.97pt5', 'rsquared.notGeo.mean', 'rsquared.notGeo.2pt5', 'rsquared.notGeo.97.5',
