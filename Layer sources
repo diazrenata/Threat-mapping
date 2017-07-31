@@ -1,0 +1,80 @@
+# Layer sources
+
+## Climate change
+Oregon state PRISM data:
+
+PRISM Climate Group, Oregon State University, http://prism.oregonstate.edu, created 4 Feb 2004
+http://www.prism.oregonstate.edu/documents/PRISM_terms_of_use.pdf
+http://www.prism.oregonstate.edu/recent/
+http://www.prism.oregonstate.edu/historical/
+
+## Climate stability
+Based on PRISM data from above.
+
+Calculated as in these papers:
+
+
+## Roads
+
+TIGER road database:
+U.S. Department of Commerce, U.S. Census Bureau, Geography Divisi, 2010, TIGER/Line 2010 Census, Census Tract national-based.
+
+https://www.census.gov/geo/www/tiger%3E
+
+## Human population density - 2010 census
+Downloaded via American Fact Finder download center:
+https://factfinder.census.gov/faces/nav/jsf/pages/download_center.xhtml
+Dataset selections:
+
+2010 Demographic Profile SF
+
+County
+All Counties within United States
+
+## Venter (Human footprint) layers:
+http://datadryad.org/resource/doi:10.5061/dryad.052q5.2
+Venter O, Sanderson EW, Magrach A, Allan JR, Beher J, Jones KR, Possingham HP, Laurance WF, Wood P, Fekete BM, Levy MA, Watson JE (2016) Global terrestrial Human Footprint maps for 1993 and 2009. Scientific Data 3: 160067. http://dx.doi.org/10.1038/sdata.2016.67
+
+Venter O, Sanderson EW, Magrach A, Allan JR, Beher J, Jones KR, Possingham HP, Laurance WF, Wood P, Fekete BM, Levy MA, Watson JEM (2016) Data from: Global terrestrial Human Footprint maps for 1993 and 2009. Dryad Digital Repository. http://dx.doi.org/10.5061/dryad.052q5.2
+
+Datadryad requests citing both the paper and the repository.
+
+## National land cover database
+https://www.mrlc.gov/nlcd11_data.php
+
+Preferred NLCD 2011 citation: Homer, C.G., Dewitz, J.A., Yang, L., Jin, S., Danielson, P., Xian, G., Coulston, J., Herold, N.D., Wickham, J.D., and Megown, K., 2015, Completion of the 2011 National Land Cover Database for the conterminous United States-Representing a decade of land cover change information. Photogrammetric Engineering and Remote Sensing, v. 81, no. 5, p. 345-354
+
+## Active mines
+
+## MRDS
+## Sriram et al layers:
+#
+## Zabel crop suitability
+## Human appropriation of NPP
+## PADUS
+## Invasive alien species - EDDMapS
+Unsure about permissions.
+
+## NLCD Percent Developed Imperviousness
+https://www.mrlc.gov/nlcd11_data.php
+
+Preferred NLCD 2011 Percent Developed Imperviousness citation: Xian, G., Homer, C., Dewitz, J., Fry, J., Hossain, N., and Wickham, J., 2011. The change of impervious surface area between 2001 and 2006 in the conterminous United States. Photogrammetric Engineering and Remote Sensing, Vol. 77(8): 758-762.
+
+## SPARROW Water quality (N and P pollution)
+## Railroads
+National atlas
+Metadata:
+  Identification_Information:
+    Citation:
+      Citation_Information:
+        Originator: National Atlas of the United States
+        Publication_Date: 200509
+        Title: Railroads of the United States
+        Publication_Information:
+          Publication_Place: Reston, Virginia
+          Publisher: National Atlas of the United States
+        Online_Linkage: <http://nationalatlas.gov/atlasftp.html>
+## Oil and gas wells
+## Crude oil pipelines
+## Shale plays
+## Coal mines
