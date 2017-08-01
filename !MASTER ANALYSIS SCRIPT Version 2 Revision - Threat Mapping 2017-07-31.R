@@ -2997,7 +2997,11 @@ runStanModel(threat ='c2pt3_livestock',predictors =  c('nlcdPastureStd'), states
 
 # 32 4
 runStanModel(threat ='c2pt3_livestock', predictors = c('nlcdGrassPastureStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
+runStanModel(threat ='c1p0x1x2x3_allDev',  predictors = c('venterBuiltStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
 
+# 16
+runStanModel(threat ='allRoads', predictors = c("railRoadDensityStd"), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
+runStanModel(threat ='c6p1p0x1x2_allRec', predictors = c("iucn1a"), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
 
 # states false 
 # running on 32 1
