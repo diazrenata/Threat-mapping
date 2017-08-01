@@ -12,7 +12,7 @@ http://www.prism.oregonstate.edu/historical/
 Based on PRISM data from above.
 
 Calculated as in these papers:
-
+(see gdrive folder - * compile citations here *)
 
 ## Roads
 
@@ -47,11 +47,15 @@ Preferred NLCD 2011 citation: Homer, C.G., Dewitz, J.A., Yang, L., Jin, S., Dani
 ## Active mines
 
 ## MRDS
+
 ## Sriram et al layers:
-#
+
 ## Zabel crop suitability
+
 ## Human appropriation of NPP
+
 ## PADUS
+
 ## Invasive alien species - EDDMapS
 Unsure about permissions.
 
@@ -61,6 +65,7 @@ https://www.mrlc.gov/nlcd11_data.php
 Preferred NLCD 2011 Percent Developed Imperviousness citation: Xian, G., Homer, C., Dewitz, J., Fry, J., Hossain, N., and Wickham, J., 2011. The change of impervious surface area between 2001 and 2006 in the conterminous United States. Photogrammetric Engineering and Remote Sensing, Vol. 77(8): 758-762.
 
 ## SPARROW Water quality (N and P pollution)
+
 ## Railroads
 National atlas
 Metadata:
@@ -75,6 +80,9 @@ Metadata:
           Publisher: National Atlas of the United States
         Online_Linkage: <http://nationalatlas.gov/atlasftp.html>
 ## Oil and gas wells
+
 ## Crude oil pipelines
+
 ## Shale plays
+
 ## Coal mines
