@@ -2765,7 +2765,7 @@ cat('\n', date(), '\n'); flush.console()
 #
 # rm(standardize)
 #
-
+# ADAM: where is natureServeCounties saved? in "/Data for stan"
 # #
 # ### Prepare species threat and county occurrence data for stan ###
 # # # Load threat and species occurrence data
@@ -2914,6 +2914,7 @@ cat('\n', date(), '\n'); flush.console()
 # # Save speciesThreats with all (including conglomerate) threats
 # write.csv(speciesThreats, 'H:/Global Change Program/Research/Multi-Threat Assessment/Analysis - Threat Mapping/Data for stan/natureServeCounties0713/speciesThreats.csv')
 
+# ADAM for runing STAN serially... but gets stuck
 ### Run stan models ###
 #### CAR stan cascade ####
 #### cascade start ####
@@ -2921,7 +2922,7 @@ cat('\n', date(), '\n'); flush.console()
 #
 # Not using as on 7 31 - too complicated
 # runFun <- function(threat, predictors, states, ncores, CAR, scramble, justEndemics, islands) {
-# Sys.sleep(15)
+# Sys.sleep(15) # wait 15 sec
 #     predictorString <- predictors[1]
 #   if (length(predictors) > 1) {
 #     for (i in 2:length(predictors)) {
@@ -2978,73 +2979,63 @@ cat('\n', date(), '\n'); flush.console()
 
 
 
-
+# ADAM: directories, files
 setwd('H:/Global Change Program/Research/Multi-Threat Assessment/Analysis - Threat Mapping/CAR beginning 07132017')
 source('Stan function.R')
 
-# new 8/2
-# 16 g
-runStanModel(threat='c11p3x4_tempPrecip',predictors=c('prePropAllYrsStd', 'prePropAllYrsStdSqrd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+# ADAM to run:
+# ARGUMENTS
+# threat		column name of # of species threatened by stated threat, in NS shapefile (with renamed columns)
+# predictors	column name of # of threat ("X"), in NS shapefile (with renamed columns)
+# states		include states as covariate
+# ncores		num cores
+# CAR			run CAR?
+# scramble		if TRUE then permutes every value by rows
+#					keeps FIPS code with the county polygon BUT
+#					threat ("X") and number of species threatened get swapped with other counties (both within and between states)
+#					useful to see if CAR is important
+# justEndemics	TRUE ==> just species in one county
+# islands		cannot be TRUE if using CAR because CAR discards "islands" (counties with no neighbors... could be true islands or counties surrounded by counties with 0 species???)
+#				if CAR = FALSE and islands = FALSE then this is comparable to analyzing the data used when CAR = TRUE (but without CAR)... faster if TRUE
 
-runStanModel(threat='c11p3x4_tempPrecip',predictors=c('prePropLast30Std','prePropLast30StdSqrd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+# RETURNS
+# results are in "CAR beginning 07132017" --> "CountyEndangeredSpecies-master" --> "CAR Analyses
 
-# 8g 
-runStanModel(threat='c2p1x3_cropsLive',predictors=c('nlcdCultivStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
-
+# ALSO
+# runStanModel loads shapefile, speciesThreats (1/0 if species is threatened... in "Data for stan" folder), natureServeCountyOccurrence (1 row per species in each county... from NS)
+# runStanModel quits R when done
+#
+# to run would only need to source "Stan function R" then call this line
+#
+# If STAN Rdata object written but subsequent files not, then load STAN object, run first part of "Stan function R.r" up to "FitModel = sampling(StanModel," line (don't run this) then run commands thereafter.
 
 # 32 1
-runStanModel(threat='c11p3x4_tempPrecip',predictors=c('prePropAllYrsStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+runStanModel(threat ='c2pt1_crops', predictors = c('nlcdCropsStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
 
 # 32 2
-runStanModel(threat='c11p3x4_tempPrecip',predictors=c('prePropLast30Std'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
-runStanModel(threat='allRoads',predictors=c('TIGERroadDensityStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
-# 32 3
+runStanModel(threat ='c2p0x1x2x3_allAg', predictors = c('cropSuitStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
+runStanModel(threat ='c2pt1_crops',predictors =  c('venterCropStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
 
-runStanModel(threat='allRoads',predictors=c('sriProxRoadsStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
-runStanModel(threat='c1p0x1x2x3_allDev',predictors=c('venterPop2010sStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+# 32 3 
+runStanModel(threat ='c2pt1_crops', predictors = c('cropSuitStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
+runStanModel(threat ='c2pt3_livestock',predictors =  c('nlcdPastureStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
 
-#32 4 
-runStanModel(threat='c1p0x1x2x3_allDev',predictors=c('venterHFIStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
-#runStanModel(threat='c1p0x1x2x3_allDev',predictors=c('percentImpervStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
-runStanModel(threat='c2pt1_crops',predictors=c('hanppStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+# 32 4
+runStanModel(threat ='c2pt3_livestock', predictors = c('nlcdGrassPastureStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
+runStanModel(threat ='c1p0x1x2x3_allDev',  predictors = c('venterBuiltStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
+
+# 16
+runStanModel(threat ='allRoads', predictors = c("railRoadDensityStd"), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
+runStanModel(threat ='c6p1p0x1x2_allRec', predictors = c("iucn1a"), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
+
+# states false 
+# running on 32 1
+runStanModel(threat = 'anyThreat', predictors = c("venterHFIStd"), states = FALSE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
 
 
 
-# yet to run
-runStanModel(threat='c11p3x4_tempPrecip',predictors=c('prePropAllYrsStd', 'prePropAllYrsStdSqrd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
-
-runStanModel(threat='c11p3x4_tempPrecip',predictors=c('prePropLast30Std','prePropLast30StdSqrd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
-runStanModel(threat='c3p1_oilGas',predictors=c('nOilGasWellsStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
-runStanModel(threat='c3p0_oilMining',predictors=c('mrdsMinesDensStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
-runStanModel(threat='c3p2_mining',predictors=c('activeMinesDensStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
-runStanModel(threat='c3p2_mining',predictors=c('mrdsMinesDensStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
-runStanModel(threat='c6p1p0x1x2_allRec',predictors=c('gap123X1aStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
-runStanModel(threat='c6p1p0_rec',predictors=c('gap12X1aStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
-runStanModel(threat='c6p1p2_orv',predictors=c('gap3X12'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
-runStanModel(threat='c6p0x1_allHumanInt',predictors=c('logCensusPopStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
-runStanModel(threat='c6p0x1_allHumanInt',predictors=c('sriProxRoadsStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
-runStanModel(threat='c6p0x1_allHumanInt',predictors=c('venterPop1990sStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
-runStanModel(threat='c6p0x1_allHumanInt',predictors=c('venterPop2010sStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
-runStanModel(threat='c9p3_agPollution',predictors=c('sparrowNPStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
-runStanModel(threat='c9p3_agPollution',predictors=c('nlcdCultivStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
-runStanModel(threat='c9p3_agPollution',predictors=c('cropSuitStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
-runStanModel(threat='c11p1_ecosytemMove',predictors=c('kdeMeanStabStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
-runStanModel(threat='anyThreat',predictors=c('logCensusPopStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
-runStanModel(threat='anyThreat',predictors=c('venterHFIStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
-runStanModel(threat='anyThreat',predictors=c('nlcdDevStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
-runStanModel(threat='anyThreat',predictors=c('percentImpervStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
-runStanModel(threat='anyThreat',predictors=c('venterBuiltStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
-runStanModel(threat='anyThreat',predictors=c('logCensusPopStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
-runStanModel(threat='anyThreat',predictors=c('sriProxRoadsStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
-runStanModel(threat='anyThreat',predictors=c('venterNtLtStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
-runStanModel(threat='anyThreat',predictors=c('venterPop1990sStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
-runStanModel(threat='anyThreat',predictors=c('venterPop2010sStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
-runStanModel(threat='anyThreat',predictors=c('nlcdDevAgStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
-runStanModel(threat='anyThreat',predictors=c('gap12Std'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
-
-# 
-# # # done as of late july / early august
-# # # 8gb
+# # done as of late july / early august
+# # 8gb
 # # worked
 # runStanModel(threat = 'anyThreat', predictors <- c('iucn1aStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
 # # 16 gb
@@ -3061,7 +3052,7 @@ runStanModel(threat='anyThreat',predictors=c('gap12Std'),states=TRUE, ncores=4, 
 # 32 4
 # runStanModel(threat = 'c11p3x4_tempPrecip', predictors <- c('kdeMeanStabStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
 # runStanModel(threat = 'c11p3x4_tempPrecip', predictors <- c('temAllYrsStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
-# 
+#
 # 8gb
 # runStanModel(threat = 'c11p3x4_tempPrecip', predictors = c('temLast30Std'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
 # 16 gb
@@ -3073,37 +3064,7 @@ runStanModel(threat='anyThreat',predictors=c('gap12Std'),states=TRUE, ncores=4, 
 # 32 3
 # runStanModel(threat ='c2p0x1x2x3_allAg', predictors = c('cropSuitStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
 
-
-# 32 1
-# runStanModel(threat ='c2pt1_crops', predictors = c('nlcdCropsStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
-
-# 32 2
-# runStanModel(threat ='c2p0x1x2x3_allAg', predictors = c('cropSuitStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
-# runStanModel(threat ='c2pt1_crops',predictors =  c('venterCropStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
-
-# 32 3 
-#runStanModel(threat ='c2pt1_crops', predictors = c('cropSuitStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
-#runStanModel(threat ='c2pt3_livestock',predictors =  c('nlcdPastureStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
-
-# 32 4
-#runStanModel(threat ='c2pt3_livestock', predictors = c('nlcdGrassPastureStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
-#runStanModel(threat ='c1p0x1x2x3_allDev',  predictors = c('venterBuiltStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
-
-# 16
-#runStanModel(threat ='allRoads', predictors = c("railRoadDensityStd"), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
-# need to remove: not stdized
-#runStanModel(threat ='c6p1p0x1x2_allRec', predictors = c("iucn1aStd"), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
-
-# states false 
-# running on 32 1
-#runStanModel(threat = 'anyThreat', predictors = c("venterHFIStd"), states = FALSE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
-
-
-
-# 8g
-#runStanModel(threat ='c6p1p0x1x2_allRec', predictors = c("iucn1aStd"), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
-
-
+# ADAM: correlations between states and threat values ("X")
 #### ANOVAS ####
 #
 #
@@ -3147,6 +3108,10 @@ runStanModel(threat='anyThreat',predictors=c('gap12Std'),states=TRUE, ncores=4, 
 # rm(tops)
 #
 # stateComparisons$ANOVA.Sig <- (stateComparisons$ANOVA.P..F. <= 0.05)
+
+###########################
+### graveyard hereafter ###
+###########################
 
 # runCARModel('c2pt3_livestock', c('nlcdPastureStd'), TRUE, 4)
 #
