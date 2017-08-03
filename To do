@@ -3,3 +3,9 @@
 * compile citations for all threat layers
 * compare different mines/coal mines layers
 * units of SHAPE_AREA?
+* look at what "islands" really are re: CAR
+* tidy up X key / analysis planning documents
+* anything that is divided by  SHAPE_AREA:
+ * convert to miles
+ * divide by square miles instead
+ * currently I think this is road density, rail density. pipelines, mines as well?
