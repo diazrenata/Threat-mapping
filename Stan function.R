@@ -66,7 +66,7 @@ runStanModel <- function(threat, predictors, states, ncores, CAR, scramble, just
   natureServeCountyOccurrence <- read.csv('//mbgcl02fs/usersdatavol2/CCSD/shared/Global Change Program/Research/Multi-Threat Assessment/Threatened Species Data (NatureServe)/Data/Working/00_NS_mv_CTY_G12ESA_list_201403 - County Occurrences.csv')
   
   # format FIPS codes correctly
-  natureServeCountyOccurrence$FIPS_CODE_LONG <- apply(as.matrix(natureServeCountyOccurrence$FIPS_CD), 1, prefix, len = 5, pre = "0")
+  natureServeCountyOccurrence$FIPS_CODE_LONG <- apply(as.matrix(natureServeCountyOccurrence$FIPS_CD), 1, prefix, len = 5, pad = "0")
   
   # filter to plants
   natureServeCountyOccurrence <- natureServeCountyOccurrence[ which(natureServeCountyOccurrence$INFORMAL_TAX == "Ferns and relatives" | natureServeCountyOccurrence$INFORMAL_TAX == "Conifers and relatives" | natureServeCountyOccurrence$INFORMAL_TAX == "Hornworts" | natureServeCountyOccurrence$INFORMAL_TAX == "Liverworts" | natureServeCountyOccurrence$INFORMAL_TAX == "Mosses" | natureServeCountyOccurrence$INFORMAL_TAX == "Flowering Plants"), ]
