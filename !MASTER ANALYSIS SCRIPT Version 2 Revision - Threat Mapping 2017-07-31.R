@@ -2982,35 +2982,69 @@ cat('\n', date(), '\n'); flush.console()
 setwd('H:/Global Change Program/Research/Multi-Threat Assessment/Analysis - Threat Mapping/CAR beginning 07132017')
 source('Stan function.R')
 
+# new 8/2
+# 16 g
+runStanModel(threat='c11p3x4_tempPrecip',predictors=c('prePropAllYrsStd', 'prePropAllYrsStdSqrd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+
+runStanModel(threat='c11p3x4_tempPrecip',predictors=c('prePropLast30Std','prePropLast30StdSqrd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+
+# 8g 
+runStanModel(threat='c2p1x3_cropsLive',predictors=c('nlcdCultivStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
 
 
 # 32 1
-runStanModel(threat ='c2pt1_crops', predictors = c('nlcdCropsStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
+runStanModel(threat='c11p3x4_tempPrecip',predictors=c('prePropAllYrsStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
 
 # 32 2
-runStanModel(threat ='c2p0x1x2x3_allAg', predictors = c('cropSuitStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
-runStanModel(threat ='c2pt1_crops',predictors =  c('venterCropStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
+runStanModel(threat='c11p3x4_tempPrecip',predictors=c('prePropLast30Std'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+runStanModel(threat='allRoads',predictors=c('TIGERroadDensityStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+# 32 3
 
-# 32 3 
-runStanModel(threat ='c2pt1_crops', predictors = c('cropSuitStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
-runStanModel(threat ='c2pt3_livestock',predictors =  c('nlcdPastureStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
+runStanModel(threat='allRoads',predictors=c('sriProxRoadsStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+runStanModel(threat='c1p0x1x2x3_allDev',predictors=c('venterPop2010sStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
 
-# 32 4
-runStanModel(threat ='c2pt3_livestock', predictors = c('nlcdGrassPastureStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
-runStanModel(threat ='c1p0x1x2x3_allDev',  predictors = c('venterBuiltStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
-
-# 16
-runStanModel(threat ='allRoads', predictors = c("railRoadDensityStd"), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
-runStanModel(threat ='c6p1p0x1x2_allRec', predictors = c("iucn1a"), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
-
-# states false 
-# running on 32 1
-runStanModel(threat = 'anyThreat', predictors = c("venterHFIStd"), states = FALSE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
+#32 4 
+runStanModel(threat='c1p0x1x2x3_allDev',predictors=c('venterHFIStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+#runStanModel(threat='c1p0x1x2x3_allDev',predictors=c('percentImpervStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+runStanModel(threat='c2pt1_crops',predictors=c('hanppStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
 
 
 
-# # done as of late july / early august
-# # 8gb
+# yet to run
+runStanModel(threat='c11p3x4_tempPrecip',predictors=c('prePropAllYrsStd', 'prePropAllYrsStdSqrd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+
+runStanModel(threat='c11p3x4_tempPrecip',predictors=c('prePropLast30Std','prePropLast30StdSqrd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+runStanModel(threat='c3p1_oilGas',predictors=c('nOilGasWellsStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+runStanModel(threat='c3p0_oilMining',predictors=c('mrdsMinesDensStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+runStanModel(threat='c3p2_mining',predictors=c('activeMinesDensStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+runStanModel(threat='c3p2_mining',predictors=c('mrdsMinesDensStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+runStanModel(threat='c6p1p0x1x2_allRec',predictors=c('gap123X1aStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+runStanModel(threat='c6p1p0_rec',predictors=c('gap12X1aStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+runStanModel(threat='c6p1p2_orv',predictors=c('gap3X12'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+runStanModel(threat='c6p0x1_allHumanInt',predictors=c('logCensusPopStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+runStanModel(threat='c6p0x1_allHumanInt',predictors=c('sriProxRoadsStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+runStanModel(threat='c6p0x1_allHumanInt',predictors=c('venterPop1990sStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+runStanModel(threat='c6p0x1_allHumanInt',predictors=c('venterPop2010sStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+runStanModel(threat='c9p3_agPollution',predictors=c('sparrowNPStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+runStanModel(threat='c9p3_agPollution',predictors=c('nlcdCultivStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+runStanModel(threat='c9p3_agPollution',predictors=c('cropSuitStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+runStanModel(threat='c11p1_ecosytemMove',predictors=c('kdeMeanStabStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+runStanModel(threat='anyThreat',predictors=c('logCensusPopStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+runStanModel(threat='anyThreat',predictors=c('venterHFIStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+runStanModel(threat='anyThreat',predictors=c('nlcdDevStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+runStanModel(threat='anyThreat',predictors=c('percentImpervStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+runStanModel(threat='anyThreat',predictors=c('venterBuiltStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+runStanModel(threat='anyThreat',predictors=c('logCensusPopStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+runStanModel(threat='anyThreat',predictors=c('sriProxRoadsStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+runStanModel(threat='anyThreat',predictors=c('venterNtLtStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+runStanModel(threat='anyThreat',predictors=c('venterPop1990sStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+runStanModel(threat='anyThreat',predictors=c('venterPop2010sStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+runStanModel(threat='anyThreat',predictors=c('nlcdDevAgStd'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+runStanModel(threat='anyThreat',predictors=c('gap12Std'),states=TRUE, ncores=4, CAR=FALSE,scramble=FALSE,justEndemics=FALSE,islands=TRUE)
+
+# 
+# # # done as of late july / early august
+# # # 8gb
 # # worked
 # runStanModel(threat = 'anyThreat', predictors <- c('iucn1aStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
 # # 16 gb
@@ -3027,7 +3061,7 @@ runStanModel(threat = 'anyThreat', predictors = c("venterHFIStd"), states = FALS
 # 32 4
 # runStanModel(threat = 'c11p3x4_tempPrecip', predictors <- c('kdeMeanStabStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
 # runStanModel(threat = 'c11p3x4_tempPrecip', predictors <- c('temAllYrsStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
-#
+# 
 # 8gb
 # runStanModel(threat = 'c11p3x4_tempPrecip', predictors = c('temLast30Std'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
 # 16 gb
@@ -3038,6 +3072,36 @@ runStanModel(threat = 'anyThreat', predictors = c("venterHFIStd"), states = FALS
 # runStanModel(threat ='c2pt3_livestock', predictors = c('venterPastureStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
 # 32 3
 # runStanModel(threat ='c2p0x1x2x3_allAg', predictors = c('cropSuitStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
+
+
+# 32 1
+# runStanModel(threat ='c2pt1_crops', predictors = c('nlcdCropsStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
+
+# 32 2
+# runStanModel(threat ='c2p0x1x2x3_allAg', predictors = c('cropSuitStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
+# runStanModel(threat ='c2pt1_crops',predictors =  c('venterCropStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
+
+# 32 3 
+#runStanModel(threat ='c2pt1_crops', predictors = c('cropSuitStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
+#runStanModel(threat ='c2pt3_livestock',predictors =  c('nlcdPastureStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
+
+# 32 4
+#runStanModel(threat ='c2pt3_livestock', predictors = c('nlcdGrassPastureStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
+#runStanModel(threat ='c1p0x1x2x3_allDev',  predictors = c('venterBuiltStd'), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
+
+# 16
+#runStanModel(threat ='allRoads', predictors = c("railRoadDensityStd"), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
+# need to remove: not stdized
+#runStanModel(threat ='c6p1p0x1x2_allRec', predictors = c("iucn1aStd"), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
+
+# states false 
+# running on 32 1
+#runStanModel(threat = 'anyThreat', predictors = c("venterHFIStd"), states = FALSE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
+
+
+
+# 8g
+#runStanModel(threat ='c6p1p0x1x2_allRec', predictors = c("iucn1aStd"), states = TRUE, ncores = 4, CAR = FALSE, scramble = FALSE, justEndemics = FALSE, islands = TRUE)
 
 
 #### ANOVAS ####

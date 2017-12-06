@@ -45,12 +45,56 @@ https://www.mrlc.gov/nlcd11_data.php
 Preferred NLCD 2011 citation: Homer, C.G., Dewitz, J.A., Yang, L., Jin, S., Danielson, P., Xian, G., Coulston, J., Herold, N.D., Wickham, J.D., and Megown, K., 2015, Completion of the 2011 National Land Cover Database for the conterminous United States-Representing a decade of land cover change information. Photogrammetric Engineering and Remote Sensing, v. 81, no. 5, p. 345-354
 
 ## Active mines
+https://mrdata.usgs.gov/mineral-resources/active-mines.html
+
+"Mine plants and operations for commodities monitored by the National Minerals Information Center of the USGS. Operations included are those considered active in 2003 and surveyed by the USGS."
+
+https://mrdata.usgs.gov/mineplant/
+Active Mines and Mineral Processing Plants in the United States in 2003
+https://mrdata.usgs.gov/metadata/mineplant.txt
+Citation_Information:
+        Originator: U.S. Geological Survey
+        Publication_Date: 2005
+        Title: Active Mines and Mineral Processing Plants in the United States in 2003
+        Geospatial_Data_Presentation_Form: vector digital data
+        Publication_Information:
+          Publication_Place: Reston, Virginia
+          Publisher: U.S. Geological Survey
+        Online_Linkage: https://mrdata.usgs.gov/mineplant/
+
 
 ## MRDS
+https://mrdata.usgs.gov/mrds/
+Downloaded from: https://mrdata.usgs.gov/mineral-resources/mrds-us.html
+https://mrdata.usgs.gov/metadata/mrds.txt
+Citation:
+      Citation_Information:
+        Originator: U.S. Geological Survey
+        Publication_Date: 2005
+        Title: Mineral Resources Data System
+        Edition: 20160315
+        Geospatial_Data_Presentation_Form: map
+        Publication_Information:
+          Publication_Place: Reston, Virginia
+          Publisher: U.S. Geological Survey
+        Online_Linkage: https://mrdata.usgs.gov/mrds/
+
+Development status meanings:
+https://mrdata.usgs.gov/mrds/compact/dd.php?group=Site+characteristics
+Selected records with dev_stat (development status) == Producer, Plant, or Past Producer
+
 
 ## Sriram et al layers:
+Sriram, Sumithra & Huettmann, Falk. (2017). A Global Model of Predicted Peregrine Falcon ( Falco peregrinus ) Distribution with Open Source GIS Code and 104 Open Access Layers for use by the global public. Earth System Science Data Discussions. 1-39. 10.5194/essd-2016-65.
+
+doi:10.5194/essd-2016-65, 2017
 
 ## Zabel crop suitability
+Article Source: Global Agricultural Land Resources – A High Resolution Suitability Evaluation and Its Perspectives until 2100 under Climate Change Conditions
+Zabel F, Putzenlechner B, Mauser W (2014) Global Agricultural Land Resources – A High Resolution Suitability Evaluation and Its Perspectives until 2100 under Climate Change Conditions. PLOS ONE 9(9): e107522. https://doi.org/10.1371/journal.pone.0107522
+http://geoportal-glues.ufz.de/stories/globalsuitability.html
+http://data1-glues.ufz.de//download/glues_crop_suitability/overall_cropsuit_i/
+1981-2010.
 
 ## Human appropriation of NPP
 

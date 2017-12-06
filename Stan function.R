@@ -75,7 +75,7 @@ runStanModel <- function(threat, predictors, states, ncores, CAR, scramble, just
   
   
   cols <- read.table('H:/Global Change Program/Research/Multi-Threat Assessment/Analysis - Threat Mapping/Data for stan/natureServeCounties0713/cols.txt')
-  cols <- as.vector(cols[,1])
+  cols <- as.vector(cols[ , 1])
   
   colnames(natureServeCounties@data) <- cols
   
